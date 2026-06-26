@@ -1,18 +1,47 @@
 import packageJson from '../../package.json';
 
+import { instantRamenBrandConfig } from '@/domains/instant-ramen';
+
 // Note: Environment variables are loaded via dotenv-cli in package.json scripts.
 // Next.js automatically loads .env files in the runtime, so no manual loading is needed here.
 
 export type ConfigMap = Record<string, string>;
 
 export const envConfigs: ConfigMap = {
-  app_url: process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
-  app_name: process.env.NEXT_PUBLIC_APP_NAME ?? 'ShipAny App',
-  app_description: process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? '',
-  app_logo: process.env.NEXT_PUBLIC_APP_LOGO ?? '/logo.png',
-  app_favicon: process.env.NEXT_PUBLIC_APP_FAVICON ?? '/favicon.ico',
+  app_url: process.env.NEXT_PUBLIC_APP_URL ?? instantRamenBrandConfig.appUrl,
+  app_name:
+    process.env.NEXT_PUBLIC_APP_NAME ?? instantRamenBrandConfig.productName,
+  app_domain:
+    process.env.NEXT_PUBLIC_APP_DOMAIN ?? instantRamenBrandConfig.domain,
+  app_tagline:
+    process.env.NEXT_PUBLIC_APP_TAGLINE ?? instantRamenBrandConfig.tagline,
+  app_description:
+    process.env.NEXT_PUBLIC_APP_DESCRIPTION ??
+    instantRamenBrandConfig.description,
+  app_logo:
+    process.env.NEXT_PUBLIC_APP_LOGO ?? instantRamenBrandConfig.logoPath,
+  app_favicon:
+    process.env.NEXT_PUBLIC_APP_FAVICON ?? instantRamenBrandConfig.faviconPath,
   app_preview_image:
-    process.env.NEXT_PUBLIC_APP_PREVIEW_IMAGE ?? '/preview.png',
+    process.env.NEXT_PUBLIC_APP_PREVIEW_IMAGE ??
+    instantRamenBrandConfig.previewImagePath,
+  seo_title_template:
+    process.env.NEXT_PUBLIC_SEO_TITLE_TEMPLATE ??
+    instantRamenBrandConfig.seo.defaultTitleTemplate,
+  seo_description:
+    process.env.NEXT_PUBLIC_SEO_DESCRIPTION ??
+    instantRamenBrandConfig.seo.defaultDescription,
+  og_title:
+    process.env.NEXT_PUBLIC_OG_TITLE ?? instantRamenBrandConfig.openGraph.title,
+  og_description:
+    process.env.NEXT_PUBLIC_OG_DESCRIPTION ??
+    instantRamenBrandConfig.openGraph.description,
+  og_image:
+    process.env.NEXT_PUBLIC_OG_IMAGE ??
+    instantRamenBrandConfig.openGraph.imagePath,
+  og_image_alt:
+    process.env.NEXT_PUBLIC_OG_IMAGE_ALT ??
+    instantRamenBrandConfig.openGraph.imageAlt,
   theme: process.env.NEXT_PUBLIC_THEME ?? 'default',
   appearance: process.env.NEXT_PUBLIC_APPEARANCE ?? 'system',
   locale: process.env.NEXT_PUBLIC_DEFAULT_LOCALE ?? 'en',

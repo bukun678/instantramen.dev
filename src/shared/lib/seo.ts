@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { envConfigs } from '@/config';
 import { defaultLocale } from '@/config/locale';
+import { instantRamenBrandConfig } from '@/domains/instant-ramen';
 
 // get metadata for page component
 export function getMetadata(
@@ -31,11 +32,8 @@ export function getMetadata(
       keywords: options.keywords,
     };
 
-    // default metadata
-    const defaultMetadata = await getTranslatedMetadata(
-      defaultMetadataKey,
-      locale
-    );
+    // brand defaults
+    const defaultMetadata = getBrandDefaultMetadata();
 
     // translated metadata
     let translatedMetadata: any = {};
@@ -52,12 +50,13 @@ export function getMetadata(
       locale || ''
     );
 
-    const title =
+    const rawTitle =
       passedMetadata.title || translatedMetadata.title || defaultMetadata.title;
     const description =
       passedMetadata.description ||
       translatedMetadata.description ||
       defaultMetadata.description;
+    const title = formatSeoTitle(rawTitle);
 
     // image url
     let imageUrl = options.imageUrl || envConfigs.app_preview_image;
@@ -74,14 +73,8 @@ export function getMetadata(
     }
 
     return {
-      title:
-        passedMetadata.title ||
-        translatedMetadata.title ||
-        defaultMetadata.title,
-      description:
-        passedMetadata.description ||
-        translatedMetadata.description ||
-        defaultMetadata.description,
+      title,
+      description,
       keywords:
         passedMetadata.keywords ||
         translatedMetadata.keywords ||
@@ -92,12 +85,17 @@ export function getMetadata(
 
       openGraph: {
         type: 'website',
-        locale: locale,
+        locale: instantRamenBrandConfig.openGraph.locale || locale,
         url: canonicalUrl,
         title,
         description,
         siteName: appName,
-        images: [imageUrl.toString()],
+        images: [
+          {
+            url: imageUrl.toString(),
+            alt: envConfigs.og_image_alt,
+          },
+        ],
       },
 
       twitter: {
@@ -116,7 +114,25 @@ export function getMetadata(
   };
 }
 
-const defaultMetadataKey = 'common.metadata';
+function getBrandDefaultMetadata() {
+  return {
+    title: instantRamenBrandConfig.seo.defaultTitle,
+    description: envConfigs.seo_description,
+    keywords: instantRamenBrandConfig.seo.defaultKeywords,
+  };
+}
+
+function formatSeoTitle(title: string) {
+  if (!title) {
+    return instantRamenBrandConfig.seo.defaultTitle;
+  }
+
+  if (title.includes(instantRamenBrandConfig.productName)) {
+    return title;
+  }
+
+  return envConfigs.seo_title_template.replace('%s', title);
+}
 
 async function getTranslatedMetadata(metadataKey: string, locale: string) {
   setRequestLocale(locale);
