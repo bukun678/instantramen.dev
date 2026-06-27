@@ -227,34 +227,266 @@ export const instantRamenPageContent: Record<
     kind: 'seo-tool',
     seo: seo({
       routeKey: 'aiImageGenerator',
-      title: 'AI Image Generator',
+      title: 'AI Image Generator for Text to Image Creation',
       description:
-        'Generate images from text prompts with Instant Ramen and leading AI image models.',
+        'Generate images from text prompts with Instant Ramen, a multi-model AI image generation platform for prompt driven generation.',
       keywords:
-        'AI image generator, text to image, Instant Ramen image generator',
+        'AI image generator, text to image, prompt driven generation, multi-model AI image generation platform, Instant Ramen image generator',
       noIndex: false,
     }),
-    headline: 'AI Image Generator',
+    eyebrow: 'Text to Image · SEO Tool Page',
+    headline: 'AI Image Generator for prompt driven creation',
     summary:
-      'A search-focused tool page for text-to-image use cases. Full content migration comes later.',
+      `${productName} turns prompts into images across a future-ready provider layer. This SEO page positions ${productName} as a multi-model AI image generation platform, not a single-model site.`,
     primaryCta: { label: 'Open Create', href: '/create' },
+    secondaryCta: { label: 'Compare models', href: '/models/instant-ramen' },
+    sections: [
+      {
+        id: 'hero',
+        label: 'Text to Image',
+        title: 'Create images from natural language prompts',
+        description:
+          'Use Text to Image workflows to describe a scene, product concept, character, ad creative, or thumbnail idea, then generate visual directions with AI image models.',
+        cta: { label: 'Start text to image', href: '/create' },
+      },
+      {
+        id: 'value-proposition',
+        label: 'Multi-model platform',
+        title: `${productName} is built beyond one model`,
+        description:
+          `${productName} is a multi-model AI image generation platform, not a single-model website. The page should introduce prompt driven generation while reserving provider flexibility for Nano Banana, GPT Image 2, Instant Ramen, and future image models.`,
+        items: [
+          {
+            title: 'Prompt driven generation',
+            description:
+              'Write a prompt, choose an image direction, and use model options to turn ideas into visual outputs.',
+          },
+          {
+            title: 'Provider-ready model layer',
+            description:
+              'Future providers can expose their own capabilities without forcing the Create page to hardcode model logic.',
+          },
+          {
+            title: 'Generation and editing together',
+            description:
+              'Text to Image is the acquisition page, while the product can later connect image editing, history, and credits inside Create.',
+          },
+        ],
+      },
+      {
+        id: 'use-cases',
+        label: 'Use cases',
+        title: 'Use AI image generation for everyday creative work',
+        description:
+          'This page targets searchers who need a practical AI image generator for prompt-first image creation.',
+        items: [
+          {
+            title: 'Marketing concepts',
+            description:
+              'Generate campaign visuals, ad scenes, and landing page image directions before design production.',
+          },
+          {
+            title: 'Creator thumbnails',
+            description:
+              'Explore video covers, social images, and style directions from short prompts.',
+          },
+          {
+            title: 'Product and brand mockups',
+            description:
+              'Turn product descriptions into visual concepts, packaging ideas, and brand mood boards.',
+          },
+        ],
+      },
+      {
+        id: 'workflow',
+        label: 'Workflow',
+        title: 'From prompt to generated image',
+        description:
+          'The production workflow will live in Create. This SEO page explains the path without calling a real provider in Phase 6.',
+        steps: [
+          {
+            title: 'Write a prompt',
+            description:
+              'Describe the subject, style, composition, lighting, and output intent.',
+          },
+          {
+            title: 'Choose model capabilities',
+            description:
+              'Select a model/provider based on supported modes, aspect ratios, quality, and credit cost.',
+          },
+          {
+            title: 'Generate and iterate',
+            description:
+              'Review outputs, reuse promising prompts, and continue into editing or history in later product phases.',
+          },
+        ],
+      },
+      {
+        id: 'faq',
+        label: 'FAQ',
+        title: 'AI image generator FAQ',
+        description:
+          'Short SEO answers for text-to-image visitors before the full tool is connected.',
+        faq: [
+          {
+            question: `Is ${productName} only a Nano Banana site?`,
+            answer:
+              `No. ${productName} is intentionally positioned as a multi-model AI image generation platform, not a single-model site.`,
+          },
+          {
+            question: 'Does this page call a real AI provider today?',
+            answer:
+              'No. Phase 6 only adds the SEO content skeleton and front-end display placeholder. Provider execution comes later.',
+          },
+          {
+            question: 'Can Text to Image connect with editing later?',
+            answer:
+              'Yes. Text to Image and Image Editing are both reserved in the Instant Ramen product direction.',
+          },
+        ],
+      },
+      {
+        id: 'final-cta',
+        label: 'CTA',
+        title: 'Start with a prompt, then build a repeatable image workflow',
+        description:
+          `${productName} connects SEO acquisition to a Create workspace where prompt driven generation, provider selection, credits, and history can grow together.`,
+        cta: { label: 'Open Create', href: '/create' },
+      },
+    ],
   },
   aiImageEditor: {
     routeKey: 'aiImageEditor',
     kind: 'seo-tool',
     seo: seo({
       routeKey: 'aiImageEditor',
-      title: 'AI Image Editor',
+      title: 'AI Image Editor for Prompt-Based Image Editing',
       description:
-        'Edit, refine, and transform images with Instant Ramen AI image editing tools.',
+        'Edit existing images with prompts using Instant Ramen, an AI image generation platform for image editing and image to image workflows.',
       keywords:
-        'AI image editor, edit images with AI, image to image editor, Instant Ramen editor',
+        'AI image editor, image editing, image to image, edit existing images with prompts, Instant Ramen editor',
       noIndex: false,
     }),
-    headline: 'AI Image Editor',
+    eyebrow: 'Image Editing · SEO Tool Page',
+    headline: 'AI Image Editor for existing images',
     summary:
-      'A search-focused page for image editing queries. The real editor will live in the Create workspace.',
+      `${productName} helps creators move from an existing image to a new visual direction with prompt-based image editing. This SEO page introduces Image Editing and Image to Image as part of a broader provider-ready image platform.`,
     primaryCta: { label: 'Open editor', href: '/create/edit' },
+    secondaryCta: { label: 'Explore generator', href: '/ai-image-generator' },
+    sections: [
+      {
+        id: 'hero',
+        label: 'Image Editing',
+        title: 'Edit existing images with prompts',
+        description:
+          'Upload or reuse an image, describe the change you want, and prepare for image to image workflows that transform visuals without starting from scratch.',
+        cta: { label: 'Open image editor', href: '/create/edit' },
+      },
+      {
+        id: 'value-proposition',
+        label: 'Prompt-based editing',
+        title: 'Image editing should stay connected to generation',
+        description:
+          `${productName} is an AI image generation platform, not a single-model site. Image Editing, Image to Image, provider capabilities, and model selection should all share the same product foundation.`,
+        items: [
+          {
+            title: 'Edit existing images with prompts',
+            description:
+              'Describe background swaps, object changes, style adjustments, and creative refinements in natural language.',
+          },
+          {
+            title: 'Image to Image workflow',
+            description:
+              'Use an existing image as the source and guide the next version through prompt-based direction.',
+          },
+          {
+            title: 'Provider capability mapping',
+            description:
+              'Different providers may support image input, masks, aspect ratios, or negative prompts; the page stays model-agnostic.',
+          },
+        ],
+      },
+      {
+        id: 'use-cases',
+        label: 'Use cases',
+        title: 'Use AI image editing when the first image is already close',
+        description:
+          'This page targets creators who want to refine, transform, or repurpose existing images with prompts.',
+        items: [
+          {
+            title: 'Product image refinement',
+            description:
+              'Adjust backgrounds, presentation style, color mood, and scene direction for product visuals.',
+          },
+          {
+            title: 'Social creative variation',
+            description:
+              'Turn one visual into multiple campaign directions without rebuilding every asset manually.',
+          },
+          {
+            title: 'Concept iteration',
+            description:
+              'Keep the composition you like and prompt changes to style, setting, lighting, or details.',
+          },
+        ],
+      },
+      {
+        id: 'workflow',
+        label: 'Workflow',
+        title: 'From source image to edited output',
+        description:
+          'The real editor will live under Create. Phase 6 only presents the SEO explanation and front-end placeholder.',
+        steps: [
+          {
+            title: 'Choose or upload an image',
+            description:
+              'Start from an existing visual, generated result, product photo, or concept image.',
+          },
+          {
+            title: 'Describe the edit',
+            description:
+              'Use prompts to explain what should change, what should stay consistent, and what style to apply.',
+          },
+          {
+            title: 'Iterate across models',
+            description:
+              'Future provider capabilities will determine which models are best for editing, image to image, or mask-aware refinement.',
+          },
+        ],
+      },
+      {
+        id: 'faq',
+        label: 'FAQ',
+        title: 'AI image editor FAQ',
+        description:
+          'Short SEO answers for image editing visitors before real provider execution is connected.',
+        faq: [
+          {
+            question: 'Is Image Editing separate from generation?',
+            answer:
+              `No. ${productName} treats Image Editing as part of the same AI image generation platform, sharing model, provider, credits, and history concepts over time.`,
+          },
+          {
+            question: 'Does this support Image to Image?',
+            answer:
+              'The content and model schema reserve Image to Image workflows. Real execution will be connected in a later phase.',
+          },
+          {
+            question: 'Is this tied to one provider?',
+            answer:
+              `No. ${productName} is not a single-model site. Provider capabilities are designed to stay decoupled from the page UI.`,
+          },
+        ],
+      },
+      {
+        id: 'final-cta',
+        label: 'CTA',
+        title: 'Bring existing images into the Create workspace',
+        description:
+          'Start from an image, use prompts to define the edit, and later continue into history, prompt reuse, credits, and provider-specific capabilities.',
+        cta: { label: 'Open editor', href: '/create/edit' },
+      },
+    ],
   },
   modelInstantRamen: {
     routeKey: 'modelInstantRamen',

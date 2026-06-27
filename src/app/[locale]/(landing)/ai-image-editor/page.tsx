@@ -2,14 +2,12 @@ import { setRequestLocale } from 'next-intl/server';
 
 import {
   instantRamenPageContent,
-  InstantRamenRouteStubPage,
-  instantRamenRoutes,
+  InstantRamenSeoToolPage,
 } from '@/domains/instant-ramen';
 import { getMetadata } from '@/shared/lib/seo';
 
 export const revalidate = 3600;
 
-const route = instantRamenRoutes.aiImageEditor;
 const content = instantRamenPageContent.aiImageEditor;
 
 export const generateMetadata = getMetadata({
@@ -29,5 +27,5 @@ export default async function AiImageEditorPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <InstantRamenRouteStubPage route={route} />;
+  return <InstantRamenSeoToolPage routeKey="aiImageEditor" />;
 }
