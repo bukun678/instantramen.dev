@@ -37,8 +37,27 @@ export type InstantRamenPageContentConfig = {
   };
   sections?: Array<{
     id: string;
+    label?: string;
     title: string;
     description: string;
+    items?: Array<{
+      title: string;
+      description: string;
+      badge?: string;
+      href?: string;
+    }>;
+    steps?: Array<{
+      title: string;
+      description: string;
+    }>;
+    faq?: Array<{
+      question: string;
+      answer: string;
+    }>;
+    cta?: {
+      label: string;
+      href: string;
+    };
   }>;
 };
 

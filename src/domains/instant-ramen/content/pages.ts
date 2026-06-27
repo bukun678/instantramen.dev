@@ -1,7 +1,10 @@
 import { instantRamenBrandConfig } from '../config/brand';
 import { instantRamenRoutes } from '../config/routes';
 import type { InstantRamenRouteKey } from '../config/routes';
+import { instantRamenModels } from './models';
 import type { InstantRamenPageContentConfig } from './types';
+
+const productName = instantRamenBrandConfig.productName;
 
 function og(title: string, description: string) {
   return {
@@ -47,29 +50,151 @@ export const instantRamenPageContent: Record<
       routeKey: 'home',
       title: 'Instant Ramen AI Image Generator & Editor',
       description:
-        'Create and edit images online with Instant Ramen AI. Use Nano Banana and GPT Image 2 today, with the Instant Ramen model coming soon.',
+        `Create and edit images online with ${productName}. Use Nano Banana and GPT Image 2 today, with the ${productName} model coming soon.`,
       keywords:
         'Instant Ramen, AI image generator, AI image editor, Nano Banana, GPT Image 2',
       noIndex: false,
     }),
-    eyebrow: 'Instant Ramen Image Model · Coming Soon',
-    headline: 'Instant Ramen AI Image Generator',
+    eyebrow: `${productName} Image Model · Coming Soon`,
+    headline: `${productName} AI Image Generator`,
     summary:
-      'Create and edit images with leading AI models. Nano Banana and GPT Image 2 are reserved as provider options while Instant Ramen prepares its own model.',
+      `Create and edit images with leading AI models. ${productName} is an AI image generation platform, not a single-model site, with Text to Image, Image Editing, and future provider expansion built into the product direction.`,
     primaryCta: { label: 'Start creating', href: '/create' },
     secondaryCta: { label: 'Explore models', href: '/models/instant-ramen' },
     sections: [
       {
-        id: 'multi-model',
-        title: 'Multi-model image workflow',
+        id: 'hero',
+        label: 'AI Image Generation Platform',
+        title: `${productName} is your multi-model image workspace`,
         description:
-          'Instant Ramen is designed as a model-agnostic image platform rather than a single-model demo.',
+          `${productName} brings Text to Image and Image Editing into one creator workflow. The homepage should make it clear this is not a single-model website; it is the front door for a broader AI image generation platform.`,
+        cta: { label: 'Start creating', href: '/create' },
       },
       {
-        id: 'generation-editing',
-        title: 'Generation and editing in one workspace',
+        id: 'value-proposition',
+        label: 'Product value proposition',
+        title: 'Generate, edit, compare, and keep moving',
         description:
-          'The product structure separates SEO pages from the Create workspace where users generate, edit, and review history.',
+          'Creators should be able to move from prompt to image, from image to edit, and from one model provider to another without rebuilding their workflow.',
+        items: [
+          {
+            title: 'Text to Image',
+            description:
+              'Turn product shots, concept art, thumbnails, and campaign ideas into generated visuals.',
+          },
+          {
+            title: 'Image Editing',
+            description:
+              'Refine existing images with prompt-based edits and future mask-aware editing flows.',
+          },
+          {
+            title: 'Provider-ready architecture',
+            description:
+              'The product direction reserves a Provider → Model → Capabilities → Execution architecture for future expansion.',
+          },
+        ],
+      },
+      {
+        id: 'use-cases',
+        label: 'Use cases',
+        title: 'Built for everyday creative image work',
+        description:
+          'The homepage content targets practical search and conversion intent for AI image generation SaaS users.',
+        items: [
+          {
+            title: 'Creator thumbnails',
+            description:
+              'Create fast visual directions for video covers, social posts, and content experiments.',
+          },
+          {
+            title: 'Product concepts',
+            description:
+              'Explore packaging, mockups, advertising scenes, and product mood boards.',
+          },
+          {
+            title: 'Character and style exploration',
+            description:
+              'Iterate on visual styles, characters, and campaign assets before committing to a final direction.',
+          },
+        ],
+      },
+      {
+        id: 'models-preview',
+        label: 'Supported models preview',
+        title: 'A platform for multiple image models',
+        description:
+          `${productName} is not a single-model site. The model layer is designed to support multiple providers and model capabilities over time.`,
+        items: instantRamenModels.map((model) => ({
+          title: model.displayName,
+          description: model.description,
+          badge: model.status,
+          href: `/models/${model.slug}`,
+        })),
+      },
+      {
+        id: 'workflow-preview',
+        label: 'Create workflow preview',
+        title: 'From prompt to generation history',
+        description:
+          'The Create workspace is separate from SEO pages and will become the product entry point for generation, editing, prompt reuse, and history.',
+        steps: [
+          {
+            title: 'Choose a mode',
+            description:
+              'Start with Text to Image or Image Editing depending on the creative task.',
+          },
+          {
+            title: 'Select a model',
+            description:
+              'Pick the provider/model combination that fits quality, speed, and credit cost.',
+          },
+          {
+            title: 'Reuse what works',
+            description:
+              'History, prompt reuse, favorites, and templates are reserved for later product phases.',
+          },
+        ],
+        cta: { label: 'Open Create workspace', href: '/create' },
+      },
+      {
+        id: 'pricing-cta',
+        label: 'Credits preview',
+        title: 'Credit-based pricing for generation and editing',
+        description:
+          'ShipAny billing and credits stay as the SaaS foundation, while Instant Ramen maps model cost and usage into a creator-friendly pricing story.',
+        cta: { label: 'View pricing', href: '/pricing' },
+      },
+      {
+        id: 'faq',
+        label: 'FAQ',
+        title: 'Questions creators ask before trying an AI image platform',
+        description:
+          'Short answers that clarify product positioning before full FAQ content is migrated.',
+        faq: [
+          {
+            question: `Is ${productName} only for one AI model?`,
+            answer:
+              `No. ${productName} is positioned as an AI image generation platform, not a single-model website. The model provider layer is designed to expand.`,
+          },
+          {
+            question: 'Will it support both Text to Image and Image Editing?',
+            answer:
+              'Yes. The homepage, Create routes, and model configuration already reserve both Text to Image and Image Editing workflows.',
+          },
+          {
+            question: 'Are real AI providers connected in this phase?',
+            answer:
+              'No. This phase only establishes the homepage content skeleton and conversion structure. Provider execution comes later.',
+          },
+        ],
+      },
+      {
+        id: 'final-cta',
+        label: 'Final CTA',
+        title: 'Start with the image workflow, then grow into the platform',
+        description:
+          `${productName} will connect SEO acquisition pages to a real Create workspace for generation, editing, history, billing, and future prompt libraries.`,
+        cta: { label: 'Start creating', href: '/create' },
       },
     ],
   },
