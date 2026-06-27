@@ -9,9 +9,7 @@ const requiredPageKeys = [
   'aiImageGenerator',
   'aiImageEditor',
   'pricing',
-  'modelInstantRamen',
-  'modelNanoBanana',
-  'modelGptImage2',
+  'models',
   'create',
   'createEdit',
   'createHistory',
@@ -19,8 +17,12 @@ const requiredPageKeys = [
 
 const requiredModelSlugs = [
   'instant-ramen',
-  'nano-banana',
   'gpt-image-2',
+  'nano-banana',
+  'flux',
+  'imagen',
+  'recraft',
+  'ideogram',
 ] as const;
 
 function assert(condition: boolean, message: string) {
@@ -76,6 +78,14 @@ for (const slug of requiredModelSlugs) {
   );
   assert(Boolean(model!.seoTitle), `${slug} must have SEO title`);
   assert(Boolean(model!.seoDescription), `${slug} must have SEO description`);
+  assert(Boolean(model!.seo.title), `${slug} must have model SEO metadata`);
+  assert(
+    model!.seo.canonical === `/models/${slug}`,
+    `${slug} canonical must be generated from slug`
+  );
+  assert(model!.features.length > 0, `${slug} must declare model features`);
+  assert(model!.useCases.length > 0, `${slug} must declare model use cases`);
+  assert(model!.faq.length > 0, `${slug} must declare model FAQ`);
 }
 
 console.log('Instant Ramen SEO content config verified.');

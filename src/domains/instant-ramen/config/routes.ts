@@ -1,3 +1,5 @@
+import { instantRamenModels } from '../content/models';
+
 export type InstantRamenRouteKind =
   | 'landing'
   | 'seo-tool'
@@ -9,15 +11,13 @@ export type InstantRamenRouteKey =
   | 'pricing'
   | 'aiImageGenerator'
   | 'aiImageEditor'
-  | 'modelInstantRamen'
-  | 'modelNanoBanana'
-  | 'modelGptImage2'
+  | 'models'
   | 'create'
   | 'createEdit'
   | 'createHistory';
 
-export interface InstantRamenRoute {
-  key: InstantRamenRouteKey;
+export interface InstantRamenSitemapRoute {
+  key: string;
   path: string;
   kind: InstantRamenRouteKind;
   title: string;
@@ -33,6 +33,10 @@ export interface InstantRamenRoute {
     | 'yearly'
     | 'never';
   reserved?: boolean;
+}
+
+export interface InstantRamenRoute extends InstantRamenSitemapRoute {
+  key: InstantRamenRouteKey;
 }
 
 export const instantRamenRoutes: Record<
@@ -84,41 +88,16 @@ export const instantRamenRoutes: Record<
     changeFrequency: 'weekly',
     reserved: true,
   },
-  modelInstantRamen: {
-    key: 'modelInstantRamen',
-    path: '/models/instant-ramen',
+  models: {
+    key: 'models',
+    path: '/models',
     kind: 'model-seo',
-    title: 'Instant Ramen Model',
+    title: 'AI Image Models',
     description:
-      'Learn about the Instant Ramen image model and its planned image generation capabilities.',
+      'Explore AI image models available inside Instant Ramen, a multi-model AI image generation platform.',
     sitemap: true,
-    priority: 0.8,
+    priority: 0.85,
     changeFrequency: 'weekly',
-    reserved: true,
-  },
-  modelNanoBanana: {
-    key: 'modelNanoBanana',
-    path: '/models/nano-banana',
-    kind: 'model-seo',
-    title: 'Nano Banana Model',
-    description:
-      'Use Nano Banana through Instant Ramen as part of a multi-model AI image workflow.',
-    sitemap: true,
-    priority: 0.8,
-    changeFrequency: 'weekly',
-    reserved: true,
-  },
-  modelGptImage2: {
-    key: 'modelGptImage2',
-    path: '/models/gpt-image-2',
-    kind: 'model-seo',
-    title: 'GPT Image 2 Model',
-    description:
-      'Use GPT Image 2 through Instant Ramen for AI image generation and editing workflows.',
-    sitemap: true,
-    priority: 0.8,
-    changeFrequency: 'weekly',
-    reserved: true,
   },
   create: {
     key: 'create',
@@ -158,7 +137,22 @@ export const instantRamenRoutes: Record<
   },
 };
 
-export const instantRamenRouteList = Object.values(instantRamenRoutes);
+export const instantRamenModelRoutes: InstantRamenSitemapRoute[] =
+  instantRamenModels.map((model) => ({
+    key: `model:${model.slug}`,
+    path: `/models/${model.slug}`,
+    kind: 'model-seo',
+    title: model.seo.title,
+    description: model.seo.description,
+    sitemap: true,
+    priority: model.status === 'coming-soon' ? 0.75 : 0.8,
+    changeFrequency: 'weekly',
+  }));
+
+export const instantRamenRouteList: InstantRamenSitemapRoute[] = [
+  ...Object.values(instantRamenRoutes),
+  ...instantRamenModelRoutes,
+];
 
 export const instantRamenSitemapRoutes = instantRamenRouteList.filter(
   (route) => route.sitemap

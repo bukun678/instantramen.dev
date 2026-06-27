@@ -1,21 +1,21 @@
 import {
   getLocalizedInstantRamenPath,
+  instantRamenModels,
   instantRamenRouteList,
   instantRamenRoutes,
   instantRamenSitemapRoutes,
-} from '../src/domains/instant-ramen/config/routes';
+} from '../src/domains/instant-ramen';
 
 const expectedPaths = [
   '/',
   '/pricing',
   '/ai-image-generator',
   '/ai-image-editor',
-  '/models/instant-ramen',
-  '/models/nano-banana',
-  '/models/gpt-image-2',
+  '/models',
   '/create',
   '/create/edit',
   '/create/history',
+  ...instantRamenModels.map((model) => `/models/${model.slug}`),
 ];
 
 function assert(condition: boolean, message: string) {

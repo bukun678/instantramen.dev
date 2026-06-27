@@ -1,16 +1,14 @@
 import { setRequestLocale } from 'next-intl/server';
 
 import {
+  InstantRamenModelsIndexPage,
   instantRamenPageContent,
-  InstantRamenRouteStubPage,
-  instantRamenRoutes,
 } from '@/domains/instant-ramen';
 import { getMetadata } from '@/shared/lib/seo';
 
 export const revalidate = 3600;
 
-const route = instantRamenRoutes.modelNanoBanana;
-const content = instantRamenPageContent.modelNanoBanana;
+const content = instantRamenPageContent.models;
 
 export const generateMetadata = getMetadata({
   title: content.seo.title,
@@ -21,7 +19,7 @@ export const generateMetadata = getMetadata({
   noIndex: content.seo.noIndex,
 });
 
-export default async function NanoBananaModelPage({
+export default async function ModelsPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
@@ -29,5 +27,5 @@ export default async function NanoBananaModelPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <InstantRamenRouteStubPage route={route} />;
+  return <InstantRamenModelsIndexPage />;
 }

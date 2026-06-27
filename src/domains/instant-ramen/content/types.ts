@@ -63,7 +63,6 @@ export type InstantRamenPageContentConfig = {
 
 export type InstantRamenModelStatus =
   | 'available'
-  | 'preview'
   | 'coming-soon';
 
 export type InstantRamenProviderStatus =
@@ -86,15 +85,31 @@ export type InstantRamenAspectRatio =
 export type InstantRamenModelConfig = {
   slug: string;
   name: string;
-  displayName: string;
   provider: string;
+  displayName: string;
   providerModelId: string;
   providerStatus: InstantRamenProviderStatus;
   status: InstantRamenModelStatus;
+  shortDescription: string;
   description: string;
+  heroTitle: string;
+  heroDescription: string;
+  features: string[];
+  strengths: string[];
+  limitations: string[];
+  bestFor: string[];
+  useCases: Array<{
+    title: string;
+    description: string;
+  }>;
+  faq: Array<{
+    question: string;
+    answer: string;
+  }>;
   supportedModes: InstantRamenSupportedMode[];
   aspectRatios: InstantRamenAspectRatio[];
   creditCost: number;
+  seo: InstantRamenPageSeoConfig;
   seoTitle: string;
   seoDescription: string;
   capabilities: {
@@ -106,4 +121,17 @@ export type InstantRamenModelConfig = {
     supportsNegativePrompt: boolean;
   };
   providerOptions?: Record<string, string | number | boolean>;
+};
+
+export type InstantRamenModelComparisonStatus =
+  | 'planned'
+  | 'draft'
+  | 'published';
+
+export type InstantRamenModelComparisonConfig = {
+  slug: string;
+  leftModel: string;
+  rightModel: string;
+  status: InstantRamenModelComparisonStatus;
+  seo: InstantRamenPageSeoConfig;
 };

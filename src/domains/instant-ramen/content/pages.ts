@@ -488,53 +488,22 @@ export const instantRamenPageContent: Record<
       },
     ],
   },
-  modelInstantRamen: {
-    routeKey: 'modelInstantRamen',
+  models: {
+    routeKey: 'models',
     kind: 'model-seo',
     seo: seo({
-      routeKey: 'modelInstantRamen',
-      title: 'Instant Ramen Model',
+      routeKey: 'models',
+      title: 'AI Image Models',
       description:
-        'Learn about the upcoming Instant Ramen image model for multi-model AI image generation and editing.',
+        'Explore AI image models available inside Instant Ramen, a multi-model AI image generation platform.',
       keywords:
-        'Instant Ramen model, AI image model, image generation model',
+        'AI image models, image generation models, multi-model AI image generation platform',
       noIndex: false,
     }),
-    headline: 'Instant Ramen Model',
+    eyebrow: 'Models Framework',
+    headline: 'AI image models inside Instant Ramen',
     summary:
-      'The flagship model slot is reserved while the Instant Ramen model is not yet publicly available.',
-  },
-  modelNanoBanana: {
-    routeKey: 'modelNanoBanana',
-    kind: 'model-seo',
-    seo: seo({
-      routeKey: 'modelNanoBanana',
-      title: 'Nano Banana AI Image Model',
-      description:
-        'Use Nano Banana through Instant Ramen as part of a multi-model AI image generation and editing workflow.',
-      keywords:
-        'Nano Banana, Nano Banana AI, Nano Banana image generator, Instant Ramen Nano Banana',
-      noIndex: false,
-    }),
-    headline: 'Nano Banana Model',
-    summary:
-      'Nano Banana is reserved as one provider option inside Instant Ramen, not the full identity of the product.',
-  },
-  modelGptImage2: {
-    routeKey: 'modelGptImage2',
-    kind: 'model-seo',
-    seo: seo({
-      routeKey: 'modelGptImage2',
-      title: 'GPT Image 2 AI Image Model',
-      description:
-        'Use GPT Image 2 through Instant Ramen for AI image generation, editing, and visual iteration workflows.',
-      keywords:
-        'GPT Image 2, OpenAI image model, AI image generation, Instant Ramen GPT Image 2',
-      noIndex: false,
-    }),
-    headline: 'GPT Image 2 Model',
-    summary:
-      'GPT Image 2 is reserved as a premium provider option in the Instant Ramen model layer.',
+      `${productName} organizes model SEO around reusable model configuration. New model pages should come from data, not copied components.`,
   },
   create: {
     routeKey: 'create',
