@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
-import { instantRamenRoutes } from '@/domains/instant-ramen';
+import { instantRamenPageContent } from '@/domains/instant-ramen';
 import { getMetadata } from '@/shared/lib/seo';
 import { getCurrentSubscription } from '@/shared/models/subscription';
 import { getUserInfo } from '@/shared/models/user';
@@ -9,9 +9,15 @@ import { DynamicPage } from '@/shared/types/blocks/landing';
 
 export const revalidate = 3600;
 
+const content = instantRamenPageContent.pricing;
+
 export const generateMetadata = getMetadata({
-  metadataKey: 'pages.pricing.metadata',
-  canonicalUrl: instantRamenRoutes.pricing.path,
+  title: content.seo.title,
+  description: content.seo.description,
+  keywords: content.seo.keywords,
+  canonicalUrl: content.seo.canonical,
+  openGraph: content.seo.openGraph,
+  noIndex: content.seo.noIndex,
 });
 
 export default async function PricingPage({

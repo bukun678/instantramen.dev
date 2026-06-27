@@ -13,6 +13,12 @@ export function getMetadata(
     metadataKey?: string;
     canonicalUrl?: string; // relative path or full url
     imageUrl?: string;
+    openGraph?: {
+      title?: string;
+      description?: string;
+      imagePath?: string;
+      imageAlt?: string;
+    };
     appName?: string;
     noIndex?: boolean;
   } = {}
@@ -59,7 +65,8 @@ export function getMetadata(
     const title = formatSeoTitle(rawTitle);
 
     // image url
-    let imageUrl = options.imageUrl || envConfigs.app_preview_image;
+    let imageUrl =
+      options.imageUrl || options.openGraph?.imagePath || envConfigs.og_image;
     if (imageUrl.startsWith('http')) {
       imageUrl = imageUrl;
     } else {
@@ -87,13 +94,13 @@ export function getMetadata(
         type: 'website',
         locale: instantRamenBrandConfig.openGraph.locale || locale,
         url: canonicalUrl,
-        title,
-        description,
+        title: options.openGraph?.title || title,
+        description: options.openGraph?.description || description,
         siteName: appName,
         images: [
           {
             url: imageUrl.toString(),
-            alt: envConfigs.og_image_alt,
+            alt: options.openGraph?.imageAlt || envConfigs.og_image_alt,
           },
         ],
       },

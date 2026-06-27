@@ -1,4 +1,5 @@
 import { instantRamenBrandConfig } from '../config/brand';
+import { getInstantRamenPageContent } from '../content/pages';
 import { InstantRamenRoute } from '../config/routes';
 
 export function InstantRamenRouteStubPage({
@@ -6,6 +7,8 @@ export function InstantRamenRouteStubPage({
 }: {
   route: InstantRamenRoute;
 }) {
+  const content = getInstantRamenPageContent(route.key);
+
   return (
     <main className="mx-auto flex min-h-[calc(100vh-8rem)] w-full max-w-5xl flex-col justify-center px-6 py-20">
       <div className="rounded-3xl border bg-background/80 p-8 shadow-sm md:p-12">
@@ -13,10 +16,10 @@ export function InstantRamenRouteStubPage({
           {instantRamenBrandConfig.productName} · {route.kind}
         </p>
         <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
-          {route.title}
+          {content.headline}
         </h1>
         <p className="mt-5 max-w-2xl text-lg text-muted-foreground">
-          {route.description}
+          {content.summary}
         </p>
         {route.reserved && (
           <p className="mt-8 rounded-2xl border border-dashed p-4 text-sm text-muted-foreground">
