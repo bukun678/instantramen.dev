@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
+import { instantRamenRoutes } from '@/domains/instant-ramen';
 import { ImageGenerator } from '@/shared/blocks/generator';
 import { getMetadata } from '@/shared/lib/seo';
 import { DynamicPage } from '@/shared/types/blocks/landing';
@@ -9,7 +10,7 @@ export const revalidate = 3600;
 
 export const generateMetadata = getMetadata({
   metadataKey: 'ai.image.metadata',
-  canonicalUrl: '/ai-image-generator',
+  canonicalUrl: instantRamenRoutes.aiImageGenerator.path,
 });
 
 export default async function AiImageGeneratorPage({

@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
+import { instantRamenRoutes } from '@/domains/instant-ramen';
 import { getMetadata } from '@/shared/lib/seo';
 import { getCurrentSubscription } from '@/shared/models/subscription';
 import { getUserInfo } from '@/shared/models/user';
@@ -10,7 +11,7 @@ export const revalidate = 3600;
 
 export const generateMetadata = getMetadata({
   metadataKey: 'pages.pricing.metadata',
-  canonicalUrl: '/pricing',
+  canonicalUrl: instantRamenRoutes.pricing.path,
 });
 
 export default async function PricingPage({
