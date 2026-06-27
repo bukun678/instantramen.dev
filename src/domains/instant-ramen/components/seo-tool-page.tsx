@@ -1,6 +1,7 @@
 import { instantRamenBrandConfig } from '../config/brand';
 import type { InstantRamenRouteKey } from '../config/routes';
 import { getInstantRamenPageContent } from '../content/pages';
+import { InstantRamenTextToImageMvp } from './text-to-image-mvp';
 
 function ArrowLink({ href, label }: { href: string; label: string }) {
   return (
@@ -24,7 +25,9 @@ export function InstantRamenSeoToolPage({
   const content = getInstantRamenPageContent(routeKey);
   const sections = content.sections ?? [];
   const hero = sections.find((section) => section.id === 'hero');
-  const restSections = sections.filter((section) => section.id !== 'hero');
+  const restSections = sections
+    .filter((section) => section.id !== 'hero')
+    .slice(0, routeKey === 'aiImageGenerator' ? 2 : 4);
 
   return (
     <main className="bg-background text-foreground">
@@ -59,47 +62,45 @@ export function InstantRamenSeoToolPage({
           </div>
         </div>
 
-        <aside className="rounded-[2rem] border bg-muted/30 p-5 shadow-sm">
-          <div className="rounded-[1.5rem] border bg-background p-6">
-            <p className="text-sm font-medium text-muted-foreground">
-              {instantRamenBrandConfig.productName} tool preview
-            </p>
-            <div className="mt-6 space-y-4">
-              {(hero?.items ?? [
-                {
-                  title:
-                    routeKey === 'aiImageGenerator'
-                      ? 'Prompt'
-                      : 'Source image',
-                  description:
-                    routeKey === 'aiImageGenerator'
-                      ? 'Describe the image you want to create.'
-                      : 'Start from an existing image.',
-                },
-                {
-                  title: 'Model',
-                  description:
-                    'Choose model capabilities through a provider-ready layer.',
-                },
-                {
-                  title: 'Result',
-                  description:
-                    'Review outputs later in the Create workspace.',
-                },
-              ]).map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border bg-muted/40 p-4"
-                >
-                  <h2 className="text-sm font-semibold">{item.title}</h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+        {routeKey === 'aiImageGenerator' ? (
+          <InstantRamenTextToImageMvp compact />
+        ) : (
+          <aside className="rounded-[2rem] border bg-muted/30 p-5 shadow-sm">
+            <div className="rounded-[1.5rem] border bg-background p-6">
+              <p className="text-sm font-medium text-muted-foreground">
+                {instantRamenBrandConfig.productName} tool preview
+              </p>
+              <div className="mt-6 space-y-4">
+                {(hero?.items ?? [
+                  {
+                    title: 'Source image',
+                    description: 'Start from an existing image.',
+                  },
+                  {
+                    title: 'Model',
+                    description:
+                      'Choose model capabilities through a provider-ready layer.',
+                  },
+                  {
+                    title: 'Result',
+                    description:
+                      'Review outputs later in the Create workspace.',
+                  },
+                ]).map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border bg-muted/40 p-4"
+                  >
+                    <h2 className="text-sm font-semibold">{item.title}</h2>
+                    <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </aside>
+          </aside>
+        )}
       </section>
 
       <section className="mx-auto w-full max-w-7xl space-y-8 px-6 pb-24">

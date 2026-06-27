@@ -37,11 +37,50 @@ export function applyInstantRamenBrandToLandingLayout({
     header: {
       ...header,
       brand,
+      nav: {
+        items: [
+          {
+            title: 'AI Image Generator',
+            url: '/ai-image-generator',
+            icon: 'RiImage2Line',
+          },
+          {
+            title: 'Pricing',
+            url: '/pricing',
+            icon: 'DollarSign',
+          },
+        ],
+      },
       topbanner: undefined,
     },
     footer: {
       ...footer,
       brand,
+      nav: {
+        items: [
+          {
+            title: 'Product',
+            children: [
+              {
+                title: 'AI Image Generator',
+                url: '/ai-image-generator',
+                target: '_self',
+              },
+              {
+                title: 'AI Image Editor',
+                url: '/ai-image-editor',
+                target: '_self',
+              },
+              {
+                title: 'Pricing',
+                url: '/pricing',
+                target: '_self',
+              },
+            ],
+          },
+        ],
+      },
+      social: undefined,
       show_built_with: false,
     },
   };

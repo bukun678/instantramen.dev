@@ -1,0 +1,178 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+
+import { instantRamenTextToImageMvpModels } from '../product/text-to-image';
+
+type GenerateResult = {
+  imageUrl: string;
+  model: string;
+  provider: string;
+  mock: boolean;
+};
+
+export function InstantRamenTextToImageMvp({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
+  const [prompt, setPrompt] = useState('');
+  const [model, setModel] = useState(instantRamenTextToImageMvpModels[0].slug);
+  const [result, setResult] = useState<GenerateResult | null>(null);
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const selectedModel = useMemo(
+    () =>
+      instantRamenTextToImageMvpModels.find((item) => item.slug === model) ??
+      instantRamenTextToImageMvpModels[0],
+    [model]
+  );
+
+  async function handleGenerate() {
+    setError('');
+    setResult(null);
+
+    if (!prompt.trim()) {
+      setError('Error: Please enter a prompt first.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/instant-ramen/text-to-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          model,
+        }),
+      });
+      const payload = await response.json();
+
+      if (!response.ok || !payload.success) {
+        throw new Error(payload.error || 'Image generation failed.');
+      }
+
+      setResult(payload.data);
+    } catch (generationError) {
+      setError(
+        `Error: ${
+          generationError instanceof Error
+            ? generationError.message
+            : 'Image generation failed.'
+        }`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <section
+      className={`rounded-[2rem] border bg-background p-5 shadow-sm md:p-6 ${
+        compact ? '' : 'w-full'
+      }`}
+    >
+      <div className="mb-5">
+        <p className="text-sm font-medium text-muted-foreground">
+          Text to Image MVP
+        </p>
+        <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
+          Start generating in 30 seconds
+        </h2>
+      </div>
+
+      <div className="space-y-4">
+        <label className="block">
+          <span className="text-sm font-medium">Prompt</span>
+          <textarea
+            value={prompt}
+            onChange={(event) => setPrompt(event.target.value)}
+            placeholder="A cinematic product photo of instant ramen in a neon Tokyo street, steam rising, ultra detailed..."
+            className="mt-2 min-h-32 w-full resize-none rounded-2xl border bg-muted/30 p-4 text-sm outline-none transition focus:border-primary"
+          />
+        </label>
+
+        <div>
+          <p className="text-sm font-medium">Model</p>
+          <div className="mt-2 grid gap-3 md:grid-cols-2">
+            {instantRamenTextToImageMvpModels.map((option) => (
+              <button
+                key={option.slug}
+                type="button"
+                onClick={() => setModel(option.slug)}
+                className={`rounded-2xl border p-4 text-left transition ${
+                  option.slug === model
+                    ? 'border-primary bg-primary/10'
+                    : 'bg-muted/30 hover:bg-muted/60'
+                }`}
+              >
+                <span className="text-sm font-semibold">{option.label}</span>
+                <span className="mt-2 block text-xs leading-5 text-muted-foreground">
+                  {option.description}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGenerate}
+          disabled={isLoading}
+          className="inline-flex w-full items-center justify-center rounded-2xl bg-primary px-5 py-4 text-sm font-semibold text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLoading ? 'Loading…' : 'Generate'}
+        </button>
+
+        {error && (
+          <div className="rounded-2xl border border-destructive/40 bg-destructive/10 p-4 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
+        <div className="rounded-3xl border bg-muted/20 p-4">
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-medium">Result</p>
+              <p className="text-xs text-muted-foreground">
+                {result
+                  ? `${selectedModel.label}${result.mock ? ' · mock fallback' : ''}`
+                  : 'Your generated image will appear here.'}
+              </p>
+            </div>
+            {result?.imageUrl && (
+              <a
+                href={result.imageUrl}
+                download="instant-ramen-generated-image.svg"
+                className="rounded-full border px-4 py-2 text-xs font-medium hover:bg-muted"
+              >
+                Download
+              </a>
+            )}
+          </div>
+
+          <div className="flex aspect-square items-center justify-center overflow-hidden rounded-2xl border bg-background">
+            {result?.imageUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={result.imageUrl}
+                alt={prompt || 'Instant Ramen generated result'}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <p className="px-8 text-center text-sm text-muted-foreground">
+                Enter a prompt, choose GPT Image 2 or Nano Banana, then click
+                Generate.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
