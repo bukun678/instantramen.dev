@@ -65,6 +65,10 @@ export type InstantRamenModelStatus =
   | 'available'
   | 'coming-soon';
 
+export type InstantRamenModelAvailability =
+  | 'available'
+  | 'coming-soon';
+
 export type InstantRamenProviderStatus =
   | 'configured'
   | 'planned'
@@ -90,6 +94,11 @@ export type InstantRamenModelConfig = {
   providerModelId: string;
   providerStatus: InstantRamenProviderStatus;
   status: InstantRamenModelStatus;
+  availability: InstantRamenModelAvailability;
+  enabled: boolean;
+  visible: boolean;
+  allowGeneration: boolean;
+  showInGenerator: boolean;
   shortDescription: string;
   description: string;
   heroTitle: string;

@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from 'react';
 
-import { instantRamenTextToImageMvpModels } from '../product/text-to-image';
+import {
+  instantRamenGeneratorEntryModels,
+  instantRamenTextToImageMvpModels,
+} from '../product/text-to-image';
 
 type GenerateResult = {
   imageUrl: string;
@@ -35,6 +38,11 @@ export function InstantRamenTextToImageMvp({
 
     if (!prompt.trim()) {
       setError('Error: Please enter a prompt first.');
+      return;
+    }
+
+    if (!selectedModel) {
+      setError('Error: Please choose an available model first.');
       return;
     }
 
@@ -99,24 +107,43 @@ export function InstantRamenTextToImageMvp({
 
         <div>
           <p className="text-sm font-medium">Model</p>
-          <div className="mt-2 grid gap-3 md:grid-cols-2">
-            {instantRamenTextToImageMvpModels.map((option) => (
+          <div className="mt-2 grid gap-3 md:grid-cols-3">
+            {instantRamenGeneratorEntryModels.map((option) => {
+              const isSelected = option.slug === model;
+              const canGenerate = option.allowGeneration;
+
+              return (
               <button
                 key={option.slug}
                 type="button"
-                onClick={() => setModel(option.slug)}
+                onClick={() => {
+                  if (canGenerate) {
+                    setModel(option.slug);
+                  }
+                }}
+                disabled={!canGenerate}
                 className={`rounded-2xl border p-4 text-left transition ${
-                  option.slug === model
+                  isSelected
                     ? 'border-primary bg-primary/10'
-                    : 'bg-muted/30 hover:bg-muted/60'
+                    : canGenerate
+                      ? 'bg-muted/30 hover:bg-muted/60'
+                      : 'cursor-not-allowed bg-muted/20 opacity-70'
                 }`}
               >
-                <span className="text-sm font-semibold">{option.label}</span>
+                <span className="flex items-center justify-between gap-3 text-sm font-semibold">
+                  {option.displayName}
+                  {!canGenerate && (
+                    <span className="rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                      Coming Soon
+                    </span>
+                  )}
+                </span>
                 <span className="mt-2 block text-xs leading-5 text-muted-foreground">
-                  {option.description}
+                  {option.shortDescription}
                 </span>
               </button>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -141,7 +168,7 @@ export function InstantRamenTextToImageMvp({
               <p className="text-sm font-medium">Result</p>
               <p className="text-xs text-muted-foreground">
                 {result
-                  ? `${selectedModel.label}${result.mock ? ' · mock fallback' : ''}`
+                  ? `${selectedModel?.label ?? result.model}${result.mock ? ' · mock fallback' : ''}`
                   : 'Your generated image will appear here.'}
               </p>
             </div>

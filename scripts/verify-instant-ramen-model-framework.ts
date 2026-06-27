@@ -25,6 +25,11 @@ const requiredModelFields = [
   'name',
   'provider',
   'status',
+  'availability',
+  'enabled',
+  'visible',
+  'allowGeneration',
+  'showInGenerator',
   'shortDescription',
   'heroTitle',
   'heroDescription',
@@ -107,6 +112,35 @@ assert(
   getInstantRamenModelBySlug('instant-ramen')!.status === 'coming-soon',
   'Instant Ramen model must be coming-soon.'
 );
+assert(
+  getInstantRamenModelBySlug('instant-ramen')!.availability === 'coming-soon',
+  'Instant Ramen model availability must be coming-soon.'
+);
+assert(
+  !getInstantRamenModelBySlug('instant-ramen')!.allowGeneration,
+  'Instant Ramen model must not be generation-enabled.'
+);
+assert(
+  getInstantRamenModelBySlug('instant-ramen')!.showInGenerator,
+  'Instant Ramen model should be visible as a Coming Soon generator entry.'
+);
+
+for (const slug of ['gpt-image-2', 'nano-banana']) {
+  const model = getInstantRamenModelBySlug(slug)!;
+
+  assert(model.availability === 'available', `${slug} availability must be available.`);
+  assert(model.allowGeneration, `${slug} must be generation-enabled.`);
+  assert(model.showInGenerator, `${slug} must appear in the MVP generator entry.`);
+}
+
+for (const slug of ['flux', 'imagen', 'recraft', 'ideogram']) {
+  const model = getInstantRamenModelBySlug(slug)!;
+
+  assert(
+    !model.showInGenerator,
+    `${slug} must not appear in the MVP generator entry.`
+  );
+}
 
 for (const slug of requiredModelSlugs.filter((slug) => slug !== 'instant-ramen')) {
   assert(
@@ -146,6 +180,24 @@ assert(
 assert(
   dynamicRouteFile.includes('InstantRamenModelPageTemplate'),
   'Dynamic model route must use the shared model page template.'
+);
+
+const modelPageTemplate = readFileSync(
+  join(projectRoot, 'src/domains/instant-ramen/components/model-page-template.tsx'),
+  'utf8'
+);
+assert(
+  modelPageTemplate.includes('model.allowGeneration'),
+  'Model page CTA must branch on model generation availability.'
+);
+assert(
+  modelPageTemplate.includes('Use GPT Image 2') &&
+    modelPageTemplate.includes('Use Nano Banana'),
+  'Coming soon model page CTA must guide users to available MVP models.'
+);
+assert(
+  !modelPageTemplate.includes('/create?model=${model.slug}'),
+  'Model page CTA must not send coming soon models to a misleading create URL.'
 );
 
 const modelsIndexFile = readFileSync(join(projectRoot, modelsIndexRoutePath), 'utf8');

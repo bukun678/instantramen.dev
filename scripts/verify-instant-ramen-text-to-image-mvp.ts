@@ -3,6 +3,8 @@ import { join } from 'node:path';
 
 import {
   applyInstantRamenBrandToLandingLayout,
+  getInstantRamenGeneratorEntryModels,
+  getInstantRamenModelBySlug,
   instantRamenTextToImageMvpModels,
 } from '../src/domains/instant-ramen';
 
@@ -18,23 +20,84 @@ function read(path: string) {
   return readFileSync(join(projectRoot, path), 'utf8');
 }
 
-const allowedModelLabels = ['GPT Image 2', 'Nano Banana'];
-const allowedModelSlugs = ['gpt-image-2', 'nano-banana'];
+const allowedGenerationModelLabels = ['GPT Image 2', 'Nano Banana'];
+const allowedGenerationModelSlugs = ['gpt-image-2', 'nano-banana'];
+const allowedEntryModelSlugs = [
+  'gpt-image-2',
+  'nano-banana',
+  'instant-ramen',
+];
 
 assert(
   instantRamenTextToImageMvpModels.length === 2,
-  'MVP entry must expose exactly two primary models.'
+  'MVP generation model list must expose exactly two models.'
 );
 
 for (const model of instantRamenTextToImageMvpModels) {
   assert(
-    allowedModelLabels.includes(model.label),
-    `Unexpected MVP model label: ${model.label}.`
+    allowedGenerationModelLabels.includes(model.label),
+    `Unexpected MVP generation model label: ${model.label}.`
   );
   assert(
-    allowedModelSlugs.includes(model.slug),
-    `Unexpected MVP model slug: ${model.slug}.`
+    allowedGenerationModelSlugs.includes(model.slug),
+    `Unexpected MVP generation model slug: ${model.slug}.`
   );
+}
+
+const generatorEntryModels = getInstantRamenGeneratorEntryModels();
+
+assert(
+  generatorEntryModels.length === 3,
+  'Primary generator entry must expose GPT Image 2, Nano Banana, and Instant Ramen Coming Soon only.'
+);
+
+for (const model of generatorEntryModels) {
+  assert(
+    allowedEntryModelSlugs.includes(model.slug),
+    `Unexpected primary generator entry model: ${model.slug}.`
+  );
+  assert(model.visible, `${model.slug} must be visible when shown in the generator entry.`);
+  assert(model.enabled, `${model.slug} must be enabled in the product catalog.`);
+  assert(
+    model.showInGenerator,
+    `${model.slug} must explicitly opt into the generator entry.`
+  );
+}
+
+for (const slug of allowedGenerationModelSlugs) {
+  const model = getInstantRamenModelBySlug(slug);
+
+  assert(model, `Missing required MVP model config: ${slug}.`);
+  assert(model.status === 'available', `${slug} must be available.`);
+  assert(model.availability === 'available', `${slug} availability must be available.`);
+  assert(model.allowGeneration, `${slug} must allow generation.`);
+  assert(model.showInGenerator, `${slug} must appear in the generator entry.`);
+}
+
+const instantRamenModel = getInstantRamenModelBySlug('instant-ramen');
+
+assert(instantRamenModel, 'Missing Instant Ramen model config.');
+assert(
+  instantRamenModel.status === 'coming-soon',
+  'Instant Ramen model status must be coming-soon.'
+);
+assert(
+  instantRamenModel.availability === 'coming-soon',
+  'Instant Ramen model availability must be coming-soon.'
+);
+assert(
+  !instantRamenModel.allowGeneration,
+  'Instant Ramen model must not allow generation.'
+);
+assert(
+  instantRamenModel.showInGenerator,
+  'Instant Ramen model should be shown as Coming Soon in the primary generator entry.'
+);
+
+for (const model of generatorEntryModels) {
+  if (!allowedEntryModelSlugs.includes(model.slug)) {
+    throw new Error(`${model.slug} must not appear in the primary generator entry.`);
+  }
 }
 
 const homePage = read('src/domains/instant-ramen/components/home-landing-page.tsx');

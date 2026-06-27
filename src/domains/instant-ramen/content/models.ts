@@ -1,5 +1,6 @@
 import { instantRamenBrandConfig } from '../config/brand';
 import type {
+  InstantRamenModelAvailability,
   InstantRamenModelConfig,
   InstantRamenModelStatus,
   InstantRamenProviderStatus,
@@ -43,6 +44,11 @@ function buildModel({
   providerModelId,
   providerStatus = 'planned',
   status,
+  availability = status,
+  enabled = true,
+  visible = true,
+  allowGeneration = false,
+  showInGenerator = false,
   shortDescription,
   description,
   heroTitle,
@@ -69,6 +75,11 @@ function buildModel({
   providerModelId: string;
   providerStatus?: InstantRamenProviderStatus;
   status: InstantRamenModelStatus;
+  availability?: InstantRamenModelAvailability;
+  enabled?: boolean;
+  visible?: boolean;
+  allowGeneration?: boolean;
+  showInGenerator?: boolean;
   shortDescription: string;
   description: string;
   heroTitle: string;
@@ -96,6 +107,11 @@ function buildModel({
     providerModelId,
     providerStatus,
     status,
+    availability,
+    enabled,
+    visible,
+    allowGeneration,
+    showInGenerator,
     shortDescription,
     description:
       `${description} ${productName} presents this model inside a multi-model AI image generation platform, not as an official single-model website.`,
@@ -138,6 +154,8 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     providerModelId: 'instant-ramen-image',
     providerStatus: 'planned',
     status: 'coming-soon',
+    allowGeneration: false,
+    showInGenerator: true,
     shortDescription:
       'The planned flagship image model slot for the Instant Ramen product.',
     description:
@@ -207,6 +225,9 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     provider: 'openai',
     providerModelId: 'gpt-image-2',
     status: 'available',
+    providerStatus: 'configured',
+    allowGeneration: true,
+    showInGenerator: true,
     shortDescription:
       'A premium image model option for generation, editing, and high-fidelity visual iteration.',
     description:
@@ -276,6 +297,9 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     provider: 'nano-banana',
     providerModelId: 'nano-banana-image',
     status: 'available',
+    providerStatus: 'configured',
+    allowGeneration: true,
+    showInGenerator: true,
     shortDescription:
       'A fast image model option for prompt-driven generation and creative iteration.',
     description:
@@ -603,6 +627,20 @@ export const availableInstantRamenModels = instantRamenModels.filter(
 export const comingSoonInstantRamenModels = instantRamenModels.filter(
   (model) => model.status === 'coming-soon'
 );
+
+export const generationEnabledInstantRamenModels = instantRamenModels.filter(
+  (model) =>
+    model.enabled &&
+    model.visible &&
+    model.availability === 'available' &&
+    model.allowGeneration
+);
+
+export function getInstantRamenGeneratorEntryModels() {
+  return instantRamenModels.filter(
+    (model) => model.enabled && model.visible && model.showInGenerator
+  );
+}
 
 export function getInstantRamenModelBySlug(slug: string) {
   return instantRamenModels.find((model) => model.slug === slug);

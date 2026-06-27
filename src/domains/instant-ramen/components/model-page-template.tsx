@@ -22,6 +22,30 @@ function CtaLink({ href, label }: { href: string; label: string }) {
   );
 }
 
+function ModelHeroCta({ model }: { model: InstantRamenModelConfig }) {
+  if (model.allowGeneration) {
+    return (
+      <CtaLink
+        href={`/ai-image-generator?model=${model.slug}`}
+        label={`Generate with ${model.displayName}`}
+      />
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <p className="text-sm font-medium text-muted-foreground">
+        {model.displayName} is coming soon. You can generate images now with
+        GPT Image 2 or Nano Banana.
+      </p>
+      <div className="flex flex-wrap gap-3">
+        <CtaLink href="/ai-image-generator?model=gpt-image-2" label="Use GPT Image 2" />
+        <CtaLink href="/ai-image-generator?model=nano-banana" label="Use Nano Banana" />
+      </div>
+    </div>
+  );
+}
+
 function ListSection({
   title,
   items,
@@ -64,10 +88,7 @@ export function InstantRamenModelPageTemplate({
             {model.heroDescription}
           </p>
           <div className="mt-8">
-            <CtaLink
-              href={`/create?model=${model.slug}`}
-              label={`Try ${model.displayName}`}
-            />
+            <ModelHeroCta model={model} />
           </div>
         </div>
 
@@ -139,17 +160,17 @@ export function InstantRamenModelPageTemplate({
 
         <section className="rounded-3xl border bg-muted/30 p-8">
           <h2 className="text-3xl font-semibold">
-            Try {model.displayName} in Create
+            {model.allowGeneration
+              ? `Generate with ${model.displayName}`
+              : `${model.displayName} is coming soon`}
           </h2>
           <p className="mt-4 max-w-3xl text-muted-foreground">
-            This CTA is a placeholder for the future model-aware Create
-            workspace. No real AI provider is called in this phase.
+            {model.allowGeneration
+              ? 'Start with the focused text-to-image entry. The full model-aware workspace will connect auth, credits, history, and provider execution in the product MVP.'
+              : 'This page is kept as an SEO and product roadmap slot. Use GPT Image 2 or Nano Banana for the current MVP generation flow.'}
           </p>
           <div className="mt-6">
-            <CtaLink
-              href={`/create?model=${model.slug}`}
-              label={`Try ${model.displayName}`}
-            />
+            <ModelHeroCta model={model} />
           </div>
         </section>
       </section>
