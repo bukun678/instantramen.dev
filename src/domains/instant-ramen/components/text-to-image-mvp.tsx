@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
+import { useInstantRamenAuth } from '../auth';
 import {
   instantRamenGeneratorEntryModels,
   instantRamenTextToImageMvpModels,
@@ -24,6 +25,7 @@ export function InstantRamenTextToImageMvp({
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { openAuthModal, session } = useInstantRamenAuth();
 
   const selectedModel = useMemo(
     () =>
@@ -43,6 +45,11 @@ export function InstantRamenTextToImageMvp({
 
     if (!selectedModel) {
       setError('Error: Please choose an available model first.');
+      return;
+    }
+
+    if (!session) {
+      openAuthModal();
       return;
     }
 

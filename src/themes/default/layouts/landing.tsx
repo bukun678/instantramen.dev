@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
 import { getThemeBlock } from '@/core/theme';
+import { InstantRamenAuthProvider } from '@/domains/instant-ramen/auth';
 import {
   Footer as FooterType,
   Header as HeaderType,
@@ -20,9 +21,11 @@ export default async function LandingLayout({
 
   return (
     <div className="h-screen w-screen">
-      <Header header={header} />
-      {children}
-      <Footer footer={footer} />
+      <InstantRamenAuthProvider>
+        <Header header={header} />
+        {children}
+        <Footer footer={footer} />
+      </InstantRamenAuthProvider>
     </div>
   );
 }
