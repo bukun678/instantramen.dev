@@ -71,6 +71,7 @@ export type InstantRamenModelAvailability =
 
 export type InstantRamenProviderStatus =
   | 'configured'
+  | 'not-configured'
   | 'planned'
   | 'placeholder';
 

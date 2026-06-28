@@ -126,8 +126,8 @@ assert(
   'Text-to-image API route must use the Instant Ramen adapter.'
 );
 assert(
-  apiRoute.includes('mock'),
-  'Text-to-image API must include a mock fallback for missing provider keys.'
+  apiRoute.includes('createInstantRamenSupabaseServerClient'),
+  'Text-to-image API route must validate Supabase session server-side.'
 );
 
 const mvpComponent = read(

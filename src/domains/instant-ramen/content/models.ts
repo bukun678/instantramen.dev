@@ -225,7 +225,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     provider: 'openai',
     providerModelId: 'gpt-image-2',
     status: 'available',
-    providerStatus: 'configured',
+    providerStatus: 'not-configured',
     allowGeneration: true,
     showInGenerator: true,
     shortDescription:
@@ -297,7 +297,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     provider: 'nano-banana',
     providerModelId: 'nano-banana-image',
     status: 'available',
-    providerStatus: 'configured',
+    providerStatus: 'not-configured',
     allowGeneration: true,
     showInGenerator: true,
     shortDescription:
