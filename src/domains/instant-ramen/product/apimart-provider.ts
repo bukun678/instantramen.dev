@@ -124,11 +124,13 @@ async function readAPIMartPayload(response: Response) {
 }
 
 function getAPIMartErrorMessage(payload: any, status: number) {
-  return typeof payload?.error?.message === 'string'
+  const message = typeof payload?.error?.message === 'string'
     ? payload.error.message
     : typeof payload?.message === 'string'
       ? payload.message
       : `APImart request failed with status ${status}.`;
+
+  return message.replace(/\[sk-[^\]]+\]\s*/gi, '');
 }
 
 export async function generateAPImartImage({

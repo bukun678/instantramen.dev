@@ -197,6 +197,49 @@ async function verifyOfficialTaskQuery() {
   );
 }
 
+async function verifyProviderErrorSanitization() {
+  const mapping = getInstantRamenGenerationModelProvider('gpt-image-2');
+  assert(mapping, 'gpt-image-2 must have an APImart mapping.');
+
+  try {
+    await generateAPImartImage({
+      apiKey: 'verify-token',
+      fetcher: async () =>
+        new Response(
+          JSON.stringify({
+            message:
+              '[sk-Yqt***1b4] API key quota exhausted !token.UnlimitedQuota && token.RemainQuota = 0 (request id: verify-request)',
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            status: 429,
+          }
+        ),
+      model: mapping,
+      prompt: 'A clean APImart verification prompt',
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    assert(
+      !message.includes('sk-'),
+      'APImart provider errors must not expose API key fragments.'
+    );
+    assert(
+      message.includes('API key quota exhausted'),
+      'APimart provider errors must preserve the real provider error reason.'
+    );
+    assert(
+      message.includes('verify-request'),
+      'APImart provider errors must preserve request IDs for debugging.'
+    );
+    return;
+  }
+
+  throw new Error('APImart error sanitization must throw provider errors.');
+}
+
 async function main() {
   await expectProviderNotConfigured('gpt-image-2');
   await expectProviderNotConfigured('nano-banana');
@@ -213,6 +256,7 @@ async function main() {
     slug: 'nano-banana',
   });
   await verifyOfficialTaskQuery();
+  await verifyProviderErrorSanitization();
 
   const apiRoute = read('src/app/api/instant-ramen/text-to-image/route.ts');
   const adapter = read(
