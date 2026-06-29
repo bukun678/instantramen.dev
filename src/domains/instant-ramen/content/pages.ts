@@ -50,9 +50,9 @@ export const instantRamenPageContent: Record<
       routeKey: 'home',
       title: 'Instant Ramen AI Image Generator & Editor',
       description:
-        `Create and edit images online with ${productName}. Use Nano Banana and GPT Image 2 today, with the ${productName} model coming soon.`,
+        `Create and edit images online with ${productName}. Use Nano Banana 2 and GPT Image 2 today, with the ${productName} model coming soon.`,
       keywords:
-        'Instant Ramen, AI image generator, AI image editor, Nano Banana, GPT Image 2',
+        'Instant Ramen, AI image generator, AI image editor, Nano Banana 2, GPT Image 2',
       noIndex: false,
     }),
     eyebrow: `${productName} Image Model · Coming Soon`,
@@ -254,7 +254,7 @@ export const instantRamenPageContent: Record<
         label: 'Multi-model platform',
         title: `${productName} is built beyond one model`,
         description:
-          `${productName} is a multi-model AI image generation platform, not a single-model website. The page should introduce prompt driven generation while reserving provider flexibility for Nano Banana, GPT Image 2, Instant Ramen, and future image models.`,
+          `${productName} is a multi-model AI image generation platform, not a single-model website. The page should introduce prompt driven generation while reserving provider flexibility for Nano Banana 2, GPT Image 2, Instant Ramen, and future image models.`,
         items: [
           {
             title: 'Prompt driven generation',
@@ -329,7 +329,7 @@ export const instantRamenPageContent: Record<
           'Short SEO answers for text-to-image visitors before the full tool is connected.',
         faq: [
           {
-            question: `Is ${productName} only a Nano Banana site?`,
+            question: `Is ${productName} only a Nano Banana 2 site?`,
             answer:
               `No. ${productName} is intentionally positioned as a multi-model AI image generation platform, not a single-model site.`,
           },

@@ -268,7 +268,7 @@ export function InstantRamenTextToImageMvp({
               />
             ) : (
               <p className="px-8 text-center text-sm text-muted-foreground">
-                Enter a prompt, choose GPT Image 2 or Nano Banana, then click
+                Enter a prompt, choose GPT Image 2 or Nano Banana 2, then click
                 Generate.
               </p>
             )}

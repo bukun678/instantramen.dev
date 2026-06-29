@@ -293,7 +293,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
   buildModel({
     slug: 'nano-banana',
     name: 'nano-banana',
-    displayName: 'Nano Banana',
+    displayName: 'Nano Banana 2',
     provider: 'apimart',
     providerModelId: 'gemini-3.1-flash-image-preview',
     status: 'available',
@@ -303,10 +303,10 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     shortDescription:
       'A fast image model option for prompt-driven generation and creative iteration.',
     description:
-      'Nano Banana is treated as one available model option for image generation and editing workflows.',
-    heroTitle: 'Nano Banana for fast AI image generation',
+      'Nano Banana 2 is treated as one available model option for image generation and editing workflows.',
+    heroTitle: 'Nano Banana 2 for fast AI image generation',
     heroDescription:
-      `Use Nano Banana inside ${productName} without making the whole product a single-model site.`,
+      `Use Nano Banana 2 inside ${productName} without making the whole product a single-model site.`,
     features: [
       'Prompt driven Text to Image',
       'Creative iteration workflows',
@@ -341,23 +341,23 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     ],
     faq: [
       {
-        question: 'Is Instant Ramen just a Nano Banana website?',
+        question: 'Is Instant Ramen just a Nano Banana 2 website?',
         answer:
-          `No. Nano Banana is one available model inside ${productName}, a multi-model AI image generation platform.`,
+          `No. Nano Banana 2 is one available model inside ${productName}, a multi-model AI image generation platform.`,
       },
       {
-        question: 'Does this page call Nano Banana now?',
+        question: 'Does this page call Nano Banana 2 now?',
         answer:
           'No. This phase creates the SEO model framework only; provider execution is added later.',
       },
     ],
     supportedModes: ['text-to-image', 'image-to-image', 'image-editing'],
     creditCost: 4,
-    seoTitle: 'Nano Banana AI Image Model',
+    seoTitle: 'Nano Banana 2 AI Image Model',
     seoDescription:
-      'Explore Nano Banana as an available image model inside Instant Ramen for multi-model AI image generation workflows.',
+      'Explore Nano Banana 2 as an available image model inside Instant Ramen for multi-model AI image generation workflows.',
     keywords:
-      'Nano Banana, Nano Banana AI, AI image model, AI image generator',
+      'Nano Banana 2, Nano Banana 2 AI, AI image model, AI image generator',
     supportsImageInput: true,
     supportsMaskInput: false,
     supportsNegativePrompt: false,
@@ -603,7 +603,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
           `No. ${productName} is a multi-model AI image generation platform that can list Ideogram as one model option.`,
       },
       {
-        question: 'Can Ideogram be compared with GPT Image 2 or Nano Banana?',
+        question: 'Can Ideogram be compared with GPT Image 2 or Nano Banana 2?',
         answer:
           'Yes. The compare framework is reserved so future pages can compare model strengths and use cases.',
       },

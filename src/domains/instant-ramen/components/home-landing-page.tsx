@@ -13,7 +13,7 @@ export function InstantRamenHomeLandingPage() {
             {instantRamenBrandConfig.productName} · Text to Image
           </p>
           <h1 className="max-w-4xl text-5xl font-semibold tracking-tight md:text-7xl">
-            Generate images with GPT Image 2 or Nano Banana
+            Generate images with GPT Image 2 or Nano Banana 2
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
             {content.summary}

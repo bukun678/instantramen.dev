@@ -59,7 +59,7 @@ async function expectTextToImageError({
 async function main() {
   assert(
     instantRamenGenerationModelProviders.length === 2,
-    'Generation provider map must contain exactly GPT Image 2 and Nano Banana.'
+    'Generation provider map must contain exactly GPT Image 2 and Nano Banana 2.'
   );
 
   for (const slug of requiredGenerationModels) {

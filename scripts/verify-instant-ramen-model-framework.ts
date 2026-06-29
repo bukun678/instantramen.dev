@@ -192,7 +192,7 @@ assert(
 );
 assert(
   modelPageTemplate.includes('Use GPT Image 2') &&
-    modelPageTemplate.includes('Use Nano Banana'),
+    modelPageTemplate.includes('Use Nano Banana 2'),
   'Coming soon model page CTA must guide users to available MVP models.'
 );
 assert(

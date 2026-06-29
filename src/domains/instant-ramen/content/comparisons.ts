@@ -36,11 +36,11 @@ export const instantRamenModelComparisons: InstantRamenModelComparisonConfig[] =
     status: 'planned',
     seo: comparisonSeo({
       slug: 'nano-banana-vs-gpt-image-2',
-      title: 'Nano Banana vs GPT Image 2',
+      title: 'Nano Banana 2 vs GPT Image 2',
       description:
-        'Compare Nano Banana and GPT Image 2 for AI image generation inside Instant Ramen, a multi-model AI image generation platform.',
+        'Compare Nano Banana 2 and GPT Image 2 for AI image generation inside Instant Ramen, a multi-model AI image generation platform.',
       keywords:
-        'Nano Banana vs GPT Image 2, AI image model comparison, image generation models',
+        'Nano Banana 2 vs GPT Image 2, AI image model comparison, image generation models',
     }),
   },
   {

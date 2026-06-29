@@ -20,7 +20,7 @@ function read(path: string) {
   return readFileSync(join(projectRoot, path), 'utf8');
 }
 
-const allowedGenerationModelLabels = ['GPT Image 2', 'Nano Banana'];
+const allowedGenerationModelLabels = ['GPT Image 2', 'Nano Banana 2'];
 const allowedGenerationModelSlugs = ['gpt-image-2', 'nano-banana'];
 const allowedEntryModelSlugs = [
   'gpt-image-2',
@@ -48,7 +48,7 @@ const generatorEntryModels = getInstantRamenGeneratorEntryModels();
 
 assert(
   generatorEntryModels.length === 3,
-  'Primary generator entry must expose GPT Image 2, Nano Banana, and Instant Ramen Coming Soon only.'
+  'Primary generator entry must expose GPT Image 2, Nano Banana 2, and Instant Ramen Coming Soon only.'
 );
 
 for (const model of generatorEntryModels) {
