@@ -141,6 +141,8 @@ for (const requiredPhrase of [
   'Error',
   'Download',
   '/api/instant-ramen/text-to-image',
+  'INSTANT_RAMEN_GENERATION_POLL_MAX_ATTEMPTS = 90',
+  'INSTANT_RAMEN_GENERATION_POLL_INTERVAL_MS = 2000',
 ]) {
   assert(
     mvpComponent.includes(requiredPhrase),

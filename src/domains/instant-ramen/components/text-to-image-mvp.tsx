@@ -19,6 +19,9 @@ type GenerateResult = {
   mock: boolean;
 };
 
+const INSTANT_RAMEN_GENERATION_POLL_INTERVAL_MS = 2000;
+const INSTANT_RAMEN_GENERATION_POLL_MAX_ATTEMPTS = 90;
+
 export function InstantRamenTextToImageMvp({
   compact = false,
 }: {
@@ -40,8 +43,14 @@ export function InstantRamenTextToImageMvp({
   );
 
   async function pollTaskStatus(taskId: string) {
-    for (let attempt = 0; attempt < 30; attempt += 1) {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+    for (
+      let attempt = 0;
+      attempt < INSTANT_RAMEN_GENERATION_POLL_MAX_ATTEMPTS;
+      attempt += 1
+    ) {
+      await new Promise((resolve) =>
+        setTimeout(resolve, INSTANT_RAMEN_GENERATION_POLL_INTERVAL_MS)
+      );
 
       const response = await fetch(
         `/api/instant-ramen/text-to-image?taskId=${encodeURIComponent(taskId)}`
@@ -61,7 +70,9 @@ export function InstantRamenTextToImageMvp({
       }
     }
 
-    throw new Error('Image generation is still processing. Please try again soon.');
+    throw new Error(
+      'Image generation is still processing after 3 minutes. Please try again soon.'
+    );
   }
 
   async function handleGenerate() {
