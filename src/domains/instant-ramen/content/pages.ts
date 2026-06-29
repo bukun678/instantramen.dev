@@ -161,7 +161,7 @@ export const instantRamenPageContent: Record<
         label: 'Credits preview',
         title: 'Credit-based pricing for generation and editing',
         description:
-          'ShipAny billing and credits stay as the SaaS foundation, while Instant Ramen maps model cost and usage into a creator-friendly pricing story.',
+          'Billing and credits stay in the SaaS foundation, while Instant Ramen maps model cost and usage into a creator-friendly pricing story.',
         cta: { label: 'View pricing', href: '/pricing' },
       },
       {
@@ -212,7 +212,7 @@ export const instantRamenPageContent: Record<
     }),
     headline: 'Pricing for AI image creators',
     summary:
-      'Pricing will map ShipAny credits and subscriptions to Instant Ramen image generation and editing usage.',
+      'Pricing will map credits and subscriptions to Instant Ramen image generation and editing usage.',
     sections: [
       {
         id: 'credits',

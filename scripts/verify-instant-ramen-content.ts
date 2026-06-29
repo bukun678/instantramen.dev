@@ -88,4 +88,9 @@ for (const slug of requiredModelSlugs) {
   assert(model!.faq.length > 0, `${slug} must declare model FAQ`);
 }
 
+assert(
+  !JSON.stringify(instantRamenPageContent).includes('ShipAny'),
+  'Instant Ramen front-facing page content must not expose ShipAny template residue.'
+);
+
 console.log('Instant Ramen SEO content config verified.');
