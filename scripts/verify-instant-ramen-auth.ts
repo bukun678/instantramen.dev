@@ -25,6 +25,7 @@ const requiredFiles = [
   'src/domains/instant-ramen/auth/auth-modal.tsx',
   'src/domains/instant-ramen/auth/auth-button.tsx',
   'src/app/auth/callback/route.ts',
+  'src/app/[locale]/auth/callback/route.ts',
 ];
 
 for (const file of requiredFiles) {
@@ -79,6 +80,16 @@ assert(
 assert(
   callback.includes('NextResponse.redirect'),
   'Auth callback must redirect back after login.'
+);
+
+const localizedCallback = read('src/app/[locale]/auth/callback/route.ts');
+assert(
+  localizedCallback.includes('exchangeCodeForSession'),
+  'Localized auth callback must exchange Supabase code for a session.'
+);
+assert(
+  localizedCallback.includes('NextResponse.redirect'),
+  'Localized auth callback must redirect back after login.'
 );
 
 const provider = read('src/domains/instant-ramen/auth/auth-provider.tsx');
