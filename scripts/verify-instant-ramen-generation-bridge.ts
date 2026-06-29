@@ -30,6 +30,9 @@ async function expectTextToImageError({
   code: InstantRamenTextToImageError['code'];
   model: string;
 }) {
+  const originalKey = process.env.APIMART_API_KEY;
+  delete process.env.APIMART_API_KEY;
+
   try {
     await generateInstantRamenTextToImage({
       model,
@@ -37,6 +40,7 @@ async function expectTextToImageError({
       shipAnyUserId: 'verify-user',
     });
   } catch (error) {
+    process.env.APIMART_API_KEY = originalKey;
     assert(
       error instanceof InstantRamenTextToImageError,
       `${model} must fail with an InstantRamenTextToImageError.`
@@ -48,6 +52,7 @@ async function expectTextToImageError({
     return;
   }
 
+  process.env.APIMART_API_KEY = originalKey;
   throw new Error(`${model} must not return a generated image in this phase.`);
 }
 
@@ -64,13 +69,18 @@ async function main() {
     assert(model, `${slug} must remain in the MVP generation model list.`);
     assert(provider, `${slug} must have a generation provider mapping.`);
     assert(provider.allowGeneration, `${slug} must allow generation.`);
+    assert(provider.provider === 'apimart', `${slug} must use APImart.`);
     assert(
-      provider.providerStatus === 'not-configured',
-      `${slug} provider must be not-configured until a real provider is connected.`
+      provider.providerStatus === 'configured',
+      `${slug} provider map must be configured for APImart.`
     );
     assert(
-      provider.executionStatus === 'provider_not_configured',
-      `${slug} execution status must be provider_not_configured.`
+      provider.executionStatus === 'ready',
+      `${slug} execution status must be ready.`
+    );
+    assert(
+      provider.apiKeyEnvName === 'APIMART_API_KEY',
+      `${slug} must use APIMART_API_KEY.`
     );
   }
 

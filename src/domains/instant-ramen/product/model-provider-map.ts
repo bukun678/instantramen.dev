@@ -3,10 +3,10 @@ import {
   type InstantRamenModelConfig,
 } from '../content';
 
-export type InstantRamenGenerationProviderStatus = 'not-configured';
+export type InstantRamenGenerationProviderStatus = 'configured';
 
 export type InstantRamenGenerationExecutionStatus =
-  | 'provider_not_configured';
+  | 'ready';
 
 export type InstantRamenGenerationModelProvider = {
   slug: string;
@@ -15,6 +15,7 @@ export type InstantRamenGenerationModelProvider = {
   providerModelId: string;
   providerStatus: InstantRamenGenerationProviderStatus;
   executionStatus: InstantRamenGenerationExecutionStatus;
+  apiKeyEnvName: 'APIMART_API_KEY';
   allowGeneration: boolean;
   creditCost: number;
 };
@@ -35,8 +36,9 @@ function buildGenerationModelProvider(
     displayName: model.displayName,
     provider: model.provider,
     providerModelId: model.providerModelId,
-    providerStatus: 'not-configured',
-    executionStatus: 'provider_not_configured',
+    providerStatus: 'configured',
+    executionStatus: 'ready',
+    apiKeyEnvName: 'APIMART_API_KEY',
     allowGeneration:
       model.enabled &&
       model.visible &&

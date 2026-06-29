@@ -4,14 +4,18 @@ import { useMemo, useState } from 'react';
 
 import { useInstantRamenAuth } from '../auth';
 import {
+  instantRamenTextToImageSizes,
   instantRamenGeneratorEntryModels,
   instantRamenTextToImageMvpModels,
-} from '../product/text-to-image';
+} from '../product';
 
 type GenerateResult = {
-  imageUrl: string;
+  imageUrl: string | null;
   model: string;
   provider: string;
+  providerModelId?: string;
+  status?: 'pending' | 'succeeded' | 'failed';
+  taskId?: string;
   mock: boolean;
 };
 
@@ -22,6 +26,7 @@ export function InstantRamenTextToImageMvp({
 }) {
   const [prompt, setPrompt] = useState('');
   const [model, setModel] = useState(instantRamenTextToImageMvpModels[0].slug);
+  const [size, setSize] = useState('16:9');
   const [result, setResult] = useState<GenerateResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,6 +38,31 @@ export function InstantRamenTextToImageMvp({
       instantRamenTextToImageMvpModels[0],
     [model]
   );
+
+  async function pollTaskStatus(taskId: string) {
+    for (let attempt = 0; attempt < 30; attempt += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const response = await fetch(
+        `/api/instant-ramen/text-to-image?taskId=${encodeURIComponent(taskId)}`
+      );
+      const payload = await response.json();
+
+      if (!response.ok || !payload.success) {
+        throw new Error(payload.error || 'Image generation status failed.');
+      }
+
+      if (payload.data?.status === 'failed') {
+        throw new Error('Image generation failed.');
+      }
+
+      if (payload.data?.status === 'succeeded' && payload.data?.imageUrl) {
+        return payload.data;
+      }
+    }
+
+    throw new Error('Image generation is still processing. Please try again soon.');
+  }
 
   async function handleGenerate() {
     setError('');
@@ -64,12 +94,24 @@ export function InstantRamenTextToImageMvp({
         body: JSON.stringify({
           prompt,
           model,
+          size,
         }),
       });
       const payload = await response.json();
 
       if (!response.ok || !payload.success) {
         throw new Error(payload.error || 'Image generation failed.');
+      }
+
+      if (payload.data?.status === 'pending' && payload.data?.taskId) {
+        setResult(payload.data);
+        const finalResult = await pollTaskStatus(payload.data.taskId);
+        setResult({
+          ...payload.data,
+          ...finalResult,
+          mock: false,
+        });
+        return;
       }
 
       setResult(payload.data);
@@ -120,39 +162,54 @@ export function InstantRamenTextToImageMvp({
               const canGenerate = option.allowGeneration;
 
               return (
-              <button
-                key={option.slug}
-                type="button"
-                onClick={() => {
-                  if (canGenerate) {
-                    setModel(option.slug);
-                  }
-                }}
-                disabled={!canGenerate}
-                className={`rounded-2xl border p-4 text-left transition ${
-                  isSelected
-                    ? 'border-primary bg-primary/10'
-                    : canGenerate
-                      ? 'bg-muted/30 hover:bg-muted/60'
-                      : 'cursor-not-allowed bg-muted/20 opacity-70'
-                }`}
-              >
-                <span className="flex items-center justify-between gap-3 text-sm font-semibold">
-                  {option.displayName}
-                  {!canGenerate && (
-                    <span className="rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-                      Coming Soon
-                    </span>
-                  )}
-                </span>
-                <span className="mt-2 block text-xs leading-5 text-muted-foreground">
-                  {option.shortDescription}
-                </span>
-              </button>
+                <button
+                  key={option.slug}
+                  type="button"
+                  onClick={() => {
+                    if (canGenerate) {
+                      setModel(option.slug);
+                    }
+                  }}
+                  disabled={!canGenerate}
+                  className={`rounded-2xl border p-4 text-left transition ${
+                    isSelected
+                      ? 'border-primary bg-primary/10'
+                      : canGenerate
+                        ? 'bg-muted/30 hover:bg-muted/60'
+                        : 'cursor-not-allowed bg-muted/20 opacity-70'
+                  }`}
+                >
+                  <span className="flex items-center justify-between gap-3 text-sm font-semibold">
+                    {option.displayName}
+                    {!canGenerate && (
+                      <span className="rounded-full border px-2 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+                        Coming Soon
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-2 block text-xs leading-5 text-muted-foreground">
+                    {option.shortDescription}
+                  </span>
+                </button>
               );
             })}
           </div>
         </div>
+
+        <label className="block">
+          <span className="text-sm font-medium">Size</span>
+          <select
+            value={size}
+            onChange={(event) => setSize(event.target.value)}
+            className="mt-2 w-full rounded-2xl border bg-muted/30 p-4 text-sm outline-none transition focus:border-primary"
+          >
+            {instantRamenTextToImageSizes.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <button
           type="button"
@@ -175,14 +232,14 @@ export function InstantRamenTextToImageMvp({
               <p className="text-sm font-medium">Result</p>
               <p className="text-xs text-muted-foreground">
                 {result
-                  ? `${selectedModel?.label ?? result.model}${result.mock ? ' · mock fallback' : ''}`
+                  ? `${selectedModel?.label ?? result.model}${result.status === 'pending' ? ' · processing' : ''}`
                   : 'Your generated image will appear here.'}
               </p>
             </div>
             {result?.imageUrl && (
               <a
                 href={result.imageUrl}
-                download="instant-ramen-generated-image.svg"
+                download="instant-ramen-generated-image.png"
                 className="rounded-full border px-4 py-2 text-xs font-medium hover:bg-muted"
               >
                 Download
