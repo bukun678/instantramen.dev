@@ -26,7 +26,6 @@ type APIMartGenerateImageInput = {
   googleSearch?: boolean;
   imageUrls?: string[];
   model: InstantRamenGenerationModelProvider;
-  officialFallback?: boolean;
   prompt: string;
   size?: APIMartImageSize;
 };
@@ -78,14 +77,12 @@ function buildAPIMartGenerationBody({
   googleSearch,
   imageUrls,
   model,
-  officialFallback,
   prompt,
   size,
 }: {
   googleSearch?: boolean;
   imageUrls?: string[];
   model: InstantRamenGenerationModelProvider;
-  officialFallback?: boolean;
   prompt: string;
   size: APIMartImageSize;
 }) {
@@ -94,12 +91,12 @@ function buildAPIMartGenerationBody({
     prompt,
     size,
     resolution:
-      model.providerModelId === 'gemini-3.1-flash-image-preview' ? '2K' : '2k',
+      model.providerModelId === 'gemini-3.1-flash-image-preview' ? '2K' : '1k',
     n: 1,
   };
 
-  if (model.providerModelId === 'gpt-image-2-official') {
-    body.quality = 'high';
+  if (model.providerModelId === 'gpt-image-2') {
+    body.quality = 'low';
   }
 
   if (imageUrls?.length) {
@@ -108,10 +105,6 @@ function buildAPIMartGenerationBody({
 
   if (typeof googleSearch === 'boolean') {
     body.google_search = googleSearch;
-  }
-
-  if (typeof officialFallback === 'boolean') {
-    body.official_fallback = officialFallback;
   }
 
   return body;
@@ -139,7 +132,6 @@ export async function generateAPImartImage({
   googleSearch,
   imageUrls,
   model,
-  officialFallback,
   prompt,
   size = '16:9',
 }: APIMartGenerateImageInput): Promise<APIMartImageGenerationResult> {
@@ -151,7 +143,6 @@ export async function generateAPImartImage({
     googleSearch,
     imageUrls,
     model,
-    officialFallback,
     prompt,
     size,
   });

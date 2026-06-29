@@ -223,7 +223,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     name: 'gpt-image-2',
     displayName: 'GPT Image 2',
     provider: 'apimart',
-    providerModelId: 'gpt-image-2-official',
+    providerModelId: 'gpt-image-2',
     status: 'available',
     providerStatus: 'configured',
     allowGeneration: true,

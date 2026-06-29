@@ -135,6 +135,10 @@ async function verifyAPImartRequest({
       : `${slug} must not send quality in the MVP request.`
   );
   assert(body.n === 1, `${slug} must request n = 1.`);
+  assert(
+    !('official_fallback' in body),
+    `${slug} must not send official_fallback in the MVP request.`
+  );
   assert(result.status === 'pending', `${slug} fake response must be pending.`);
   assert(
     result.taskId === `task_${slug}`,
@@ -245,9 +249,9 @@ async function main() {
   await expectProviderNotConfigured('nano-banana');
 
   await verifyAPImartRequest({
-    expectedProviderModelId: 'gpt-image-2-official',
-    expectedQuality: 'high',
-    expectedResolution: '2k',
+    expectedProviderModelId: 'gpt-image-2',
+    expectedQuality: 'low',
+    expectedResolution: '1k',
     slug: 'gpt-image-2',
   });
   await verifyAPImartRequest({
