@@ -36,6 +36,23 @@ export function buildInstantRamenSoftwareApplicationSchema() {
   } as const;
 }
 
+export function buildInstantRamenWebApplicationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: instantRamenBrandConfig.productName,
+    applicationCategory: 'MultimediaApplication',
+    operatingSystem: 'Web',
+    url: instantRamenBrandConfig.appUrl,
+    description: instantRamenBrandConfig.description,
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+  } as const;
+}
+
 export function buildInstantRamenBreadcrumbSchema(
   items: ReadonlyArray<{ name: string; path: string }>
 ) {

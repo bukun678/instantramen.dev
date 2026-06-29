@@ -1,7 +1,6 @@
 import { instantRamenBrandConfig } from '../config/brand';
 import { instantRamenRoutes } from '../config/routes';
 import type { InstantRamenRouteKey } from '../config/routes';
-import { instantRamenModels } from './models';
 import type { InstantRamenPageContentConfig } from './types';
 
 const productName = instantRamenBrandConfig.productName;
@@ -48,11 +47,11 @@ export const instantRamenPageContent: Record<
     kind: 'landing',
     seo: seo({
       routeKey: 'home',
-      title: 'Instant Ramen AI Image Generator & Editor',
+      title: 'Instant Ramen AI Image Generator | GPT Image 2 & Nano Banana 2',
       description:
-        `Create and edit images online with ${productName}. Use Nano Banana 2 and GPT Image 2 today, with the ${productName} model coming soon.`,
+        `Generate AI images from text prompts with ${productName}. Use GPT Image 2 and Nano Banana 2 today, with the ${productName} model coming soon.`,
       keywords:
-        'Instant Ramen, AI image generator, AI image editor, Nano Banana 2, GPT Image 2',
+        'Instant Ramen, AI image generator, GPT Image 2, Nano Banana 2, text to image, AI image generation',
       noIndex: false,
     }),
     eyebrow: `${productName} Image Model · Coming Soon`,
@@ -71,130 +70,241 @@ export const instantRamenPageContent: Record<
         cta: { label: 'Start creating', href: '/create' },
       },
       {
-        id: 'value-proposition',
-        label: 'Product value proposition',
-        title: 'Generate, edit, compare, and keep moving',
+        id: 'what-is-instant-ramen',
+        label: 'What is Instant Ramen?',
+        title: `What is ${productName}?`,
         description:
-          'Creators should be able to move from prompt to image, from image to edit, and from one model provider to another without rebuilding their workflow.',
+          `${productName} is a new AI image generation model direction focused on creating high-quality images from text prompts. The ${productName} AI Image Generator already lets users generate AI images using GPT Image 2 and Nano Banana 2, while preparing support for the ${productName} model in the future.`,
         items: [
+          {
+            title: 'AI Image Generator',
+            description:
+              'Start with a written prompt and turn product ideas, scenes, characters, and campaign concepts into generated images.',
+          },
+          {
+            title: 'Current model support',
+            description:
+              'Use GPT Image 2 and Nano Banana 2 today from the same focused generation entry.',
+          },
+          {
+            title: `${productName} model roadmap`,
+            description:
+              'The Instant Ramen model is marked Coming Soon, so the page can build search demand without claiming unsupported availability.',
+          },
+        ],
+      },
+      {
+        id: 'supported-models',
+        label: 'Supported Models',
+        title: 'Generate with GPT Image 2 and Nano Banana 2',
+        description:
+          `${productName} keeps the first version simple: two available image models for generation, plus the Instant Ramen model reserved as a Coming Soon option.`,
+        items: [
+          {
+            title: 'GPT Image 2',
+            description:
+              'Use GPT Image 2 for prompt-driven image generation when you want a capable general-purpose model.',
+            badge: 'Available',
+            href: '/models/gpt-image-2',
+          },
+          {
+            title: 'Nano Banana 2',
+            description:
+              'Use Nano Banana 2 for fast creative image generation and prompt iteration from the same generator.',
+            badge: 'Available',
+            href: '/models/nano-banana',
+          },
+          {
+            title: 'Instant Ramen',
+            description:
+              'The Instant Ramen model is planned for future support and is clearly marked as Coming Soon.',
+            badge: 'Coming Soon',
+            href: '/models/instant-ramen',
+          },
+        ],
+      },
+      {
+        id: 'key-features',
+        label: 'Key Features',
+        title: 'Key features for fast AI image generation',
+        description:
+          'The homepage explains the core product capabilities without distracting from the first-screen generator.',
+        items: [
+          {
+            title: 'AI Image Generation',
+            description:
+              'Create new images from natural language prompts for everyday creative work.',
+          },
           {
             title: 'Text to Image',
             description:
-              'Turn product shots, concept art, thumbnails, and campaign ideas into generated visuals.',
+              'Describe the subject, composition, lighting, style, and output intent in plain text.',
           },
           {
-            title: 'Image Editing',
+            title: 'Multiple Aspect Ratios',
             description:
-              'Refine existing images with prompt-based edits and future mask-aware editing flows.',
+              'Choose common image ratios for square, portrait, landscape, and social visuals.',
           },
           {
-            title: 'Provider-ready architecture',
+            title: 'Fast Image Generation',
             description:
-              'The product direction reserves a Provider → Model → Capabilities → Execution architecture for future expansion.',
+              'Keep the workflow focused so users can move from idea to result quickly.',
+          },
+          {
+            title: 'Download Ready',
+            description:
+              'Generated results include a clear download action once the image is ready.',
+          },
+          {
+            title: 'Image Editing Coming Soon',
+            description:
+              'Image editing stays on the roadmap without adding complexity to the first MVP flow.',
+          },
+        ],
+      },
+      {
+        id: 'examples',
+        label: 'Examples',
+        title: 'Example image ideas you can generate',
+        description:
+          'Example scenarios help visitors understand the range of images they can create before they write their first prompt.',
+        items: [
+          {
+            title: 'Product photo concept',
+            description:
+              'A clean studio-style product image for a new food, beauty, or consumer goods idea.',
+          },
+          {
+            title: 'Social media visual',
+            description:
+              'A scroll-stopping image for posts, ads, banners, or campaign experiments.',
+          },
+          {
+            title: 'Character concept',
+            description:
+              'A stylized character, mascot, or visual direction for storytelling and branding.',
+          },
+        ],
+      },
+      {
+        id: 'how-it-works',
+        label: 'How It Works',
+        title: 'How to generate AI images',
+        description:
+          'The main workflow stays simple so visitors can understand and use the product immediately.',
+        steps: [
+          {
+            title: 'Enter Prompt',
+            description:
+              'Describe the image you want to create, including subject, style, mood, and composition.',
+          },
+          {
+            title: 'Choose GPT Image 2 or Nano Banana 2',
+            description:
+              'Pick one of the two available generation models from the first-screen model selector.',
+          },
+          {
+            title: 'Generate and Download',
+            description:
+              'Start generation, wait for the result, then download the image when it is ready.',
           },
         ],
       },
       {
         id: 'use-cases',
-        label: 'Use cases',
-        title: 'Built for everyday creative image work',
+        label: 'Use Cases',
+        title: 'Use cases for creators and teams',
         description:
-          'The homepage content targets practical search and conversion intent for AI image generation SaaS users.',
+          `${productName} is designed for practical image generation tasks where speed, iteration, and clear output matter.`,
         items: [
           {
-            title: 'Creator thumbnails',
+            title: 'Social Media',
             description:
-              'Create fast visual directions for video covers, social posts, and content experiments.',
+              'Create visual directions for posts, thumbnails, reels, and short-form campaign ideas.',
           },
           {
-            title: 'Product concepts',
+            title: 'Marketing',
             description:
-              'Explore packaging, mockups, advertising scenes, and product mood boards.',
+              'Generate concepts for ads, landing page visuals, email headers, and promotional assets.',
           },
           {
-            title: 'Character and style exploration',
+            title: 'Product Design',
             description:
-              'Iterate on visual styles, characters, and campaign assets before committing to a final direction.',
+              'Explore product scenes, packaging ideas, mood boards, and early visual concepts.',
+          },
+          {
+            title: 'Character Design',
+            description:
+              'Create mascots, character directions, and stylized visual identities from prompts.',
+          },
+          {
+            title: 'Blog Images',
+            description:
+              'Generate image ideas for articles, tutorials, explainers, and editorial content.',
+          },
+          {
+            title: 'Concept Art',
+            description:
+              'Turn early creative ideas into reference images for worlds, scenes, and campaigns.',
           },
         ],
-      },
-      {
-        id: 'models-preview',
-        label: 'Supported models preview',
-        title: 'A platform for multiple image models',
-        description:
-          `${productName} is not a single-model site. The model layer is designed to support multiple providers and model capabilities over time.`,
-        items: instantRamenModels.map((model) => ({
-          title: model.displayName,
-          description: model.description,
-          badge: model.status,
-          href: `/models/${model.slug}`,
-        })),
-      },
-      {
-        id: 'workflow-preview',
-        label: 'Create workflow preview',
-        title: 'From prompt to generation history',
-        description:
-          'The Create workspace is separate from SEO pages and will become the product entry point for generation, editing, prompt reuse, and history.',
-        steps: [
-          {
-            title: 'Choose a mode',
-            description:
-              'Start with Text to Image or Image Editing depending on the creative task.',
-          },
-          {
-            title: 'Select a model',
-            description:
-              'Pick the provider/model combination that fits quality, speed, and credit cost.',
-          },
-          {
-            title: 'Reuse what works',
-            description:
-              'History, prompt reuse, favorites, and templates are reserved for later product phases.',
-          },
-        ],
-        cta: { label: 'Open Create workspace', href: '/create' },
-      },
-      {
-        id: 'pricing-cta',
-        label: 'Credits preview',
-        title: 'Credit-based pricing for generation and editing',
-        description:
-          'Billing and credits stay in the SaaS foundation, while Instant Ramen maps model cost and usage into a creator-friendly pricing story.',
-        cta: { label: 'View pricing', href: '/pricing' },
       },
       {
         id: 'faq',
         label: 'FAQ',
-        title: 'Questions creators ask before trying an AI image platform',
+        title: 'Instant Ramen AI Image Generator FAQ',
         description:
-          'Short answers that clarify product positioning before full FAQ content is migrated.',
+          'Clear answers for visitors comparing AI image generators, supported models, and upcoming Instant Ramen model availability.',
         faq: [
           {
-            question: `Is ${productName} only for one AI model?`,
+            question: `What is ${productName}?`,
             answer:
-              `No. ${productName} is positioned as an AI image generation platform, not a single-model website. The model provider layer is designed to expand.`,
+              `${productName} is an AI Image Generator for creating images from text prompts. It currently supports GPT Image 2 and Nano Banana 2 while preparing support for the Instant Ramen model in the future.`,
           },
           {
-            question: 'Will it support both Text to Image and Image Editing?',
+            question: 'What is GPT Image 2?',
             answer:
-              'Yes. The homepage, Create routes, and model configuration already reserve both Text to Image and Image Editing workflows.',
+              `GPT Image 2 is one of the available generation models in ${productName}. Users can choose it from the homepage model selector before generating an image.`,
           },
           {
-            question: 'Are real AI providers connected in this phase?',
+            question: 'What is Nano Banana 2?',
             answer:
-              'No. This phase only establishes the homepage content skeleton and conversion structure. Provider execution comes later.',
+              `Nano Banana 2 is another available image generation model in ${productName}. It is presented as a model option, not as a separate official model website.`,
+          },
+          {
+            question: 'Which AI models are supported?',
+            answer:
+              `${productName} currently shows GPT Image 2 and Nano Banana 2 as available generation models. The Instant Ramen model is listed as Coming Soon.`,
+          },
+          {
+            question: 'Is Instant Ramen available now?',
+            answer:
+              'The Instant Ramen model itself is marked Coming Soon. The Instant Ramen AI Image Generator is usable today with GPT Image 2 and Nano Banana 2.',
+          },
+          {
+            question: 'Can I generate AI images for free?',
+            answer:
+              `${productName} is designed with a free-to-try entry and a credit-based path for generation. Exact pricing and credit rules can evolve as the MVP is validated.`,
+          },
+          {
+            question: 'Can I download generated images?',
+            answer:
+              'Yes. When a generated image is ready, the result panel includes a download action.',
+          },
+          {
+            question: 'Does Instant Ramen support image editing?',
+            answer:
+              'Image Editing is planned as a follow-up workflow. The first homepage flow stays focused on Text to Image generation.',
           },
         ],
       },
       {
         id: 'final-cta',
         label: 'Final CTA',
-        title: 'Start with the image workflow, then grow into the platform',
+        title: 'Start Generating Images',
         description:
-          `${productName} will connect SEO acquisition pages to a real Create workspace for generation, editing, history, billing, and future prompt libraries.`,
-        cta: { label: 'Start creating', href: '/create' },
+          'Enter a prompt, choose GPT Image 2 or Nano Banana 2, and generate your first AI image with Instant Ramen.',
+        cta: { label: 'Start Generating Images', href: '/' },
       },
     ],
   },
