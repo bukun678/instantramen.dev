@@ -1,3 +1,4 @@
+// Preserved ShipAny chat template; disabled from the Instant Ramen MVP Worker.
 'use client';
 
 import { ReactNode } from 'react';

@@ -1,3 +1,4 @@
+// Preserved ShipAny docs template; disabled from the Instant Ramen MVP Worker.
 import type { ReactNode } from 'react';
 import type { Translations } from 'fumadocs-ui/i18n';
 import { DocsLayout } from 'fumadocs-ui/layouts/notebook';

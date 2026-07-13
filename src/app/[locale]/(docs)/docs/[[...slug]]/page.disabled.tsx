@@ -1,3 +1,4 @@
+// Preserved ShipAny docs template; disabled from the Instant Ramen MVP Worker.
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import { createRelativeLink } from 'fumadocs-ui/mdx';

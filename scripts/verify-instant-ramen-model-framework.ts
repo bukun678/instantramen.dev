@@ -174,8 +174,8 @@ const dynamicRouteFile = readFileSync(
   'utf8'
 );
 assert(
-  dynamicRouteFile.includes('generateStaticParams'),
-  'Dynamic model route must generate static params from model config.'
+  dynamicRouteFile.includes('getInstantRamenModelBySlug'),
+  'Dynamic model route must resolve slugs from the shared model config.'
 );
 assert(
   dynamicRouteFile.includes('InstantRamenModelPageTemplate'),

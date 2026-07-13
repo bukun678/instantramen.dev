@@ -1,3 +1,4 @@
+// Preserved ShipAny generic AI API; disabled from the Instant Ramen MVP Worker.
 import { respData, respErr } from '@/shared/lib/resp';
 import {
   findAITaskById,

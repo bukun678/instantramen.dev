@@ -1,3 +1,4 @@
+// Preserved ShipAny chat API; disabled from the Instant Ramen MVP Worker.
 import { generateId } from 'ai';
 
 import { respData, respErr } from '@/shared/lib/resp';

@@ -1,15 +1,136 @@
-import { ComponentType, lazy, Suspense } from 'react';
+import { ComponentType } from 'react';
+import {
+  Activity,
+  ArrowLeft,
+  ArrowUpRight,
+  Ban,
+  BookOpenText,
+  Box,
+  Brain,
+  Clock,
+  Coins,
+  CreditCard,
+  DollarSign,
+  FileText,
+  Folder,
+  Github,
+  HelpCircle,
+  History,
+  Home,
+  Key,
+  Mail,
+  Menu,
+  MessageCircle,
+  Newspaper,
+  Pencil,
+  Plus,
+  Search,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  User,
+  Users,
+  Zap,
+} from 'lucide-react';
+import {
+  RiAddLine,
+  RiBarChart2Line,
+  RiChat2Line,
+  RiClapperboardAiLine,
+  RiCloudy2Fill,
+  RiCloudyFill,
+  RiCodeFill,
+  RiDatabase2Line,
+  RiDeleteBinLine,
+  RiDiscordFill,
+  RiEditLine,
+  RiEyeLine,
+  RiFlashlightFill,
+  RiGithubFill,
+  RiGoogleFill,
+  RiImage2Line,
+  RiKey2Fill,
+  RiKeyLine,
+  RiLockPasswordLine,
+  RiMessage2Line,
+  RiMusic2Line,
+  RiNextjsFill,
+  RiQuestionLine,
+  RiRefreshLine,
+  RiRobot2Line,
+  RiTaskLine,
+  RiTwitterXFill,
+  RiVideoLine,
+} from 'react-icons/ri';
 
-const iconCache: { [key: string]: ComponentType<any> } = {};
+type IconComponent = ComponentType<any>;
 
-// Function to automatically detect icon library
-function detectIconLibrary(name: string): 'ri' | 'lucide' {
-  if (name && name.startsWith('Ri')) {
-    return 'ri';
-  }
+// Keep this registry explicit. Looking icons up from a dynamically imported
+// namespace causes both complete icon libraries to be bundled into the Worker.
+const remixIconRegistry: Record<string, IconComponent> = {
+  RiAddLine,
+  RiBarChart2Line,
+  RiChat2Line,
+  RiClapperboardAiLine,
+  RiCloudy2Fill,
+  RiCloudyFill,
+  RiCodeFill,
+  RiDatabase2Line,
+  RiDeleteBinLine,
+  RiDiscordFill,
+  RiEditLine,
+  RiEyeLine,
+  RiFlashlightFill,
+  RiGithubFill,
+  RiGoogleFill,
+  RiImage2Line,
+  RiKey2Fill,
+  RiKeyLine,
+  RiLockPasswordLine,
+  RiMessage2Line,
+  RiMusic2Line,
+  RiNextjsFill,
+  RiQuestionLine,
+  RiRefreshLine,
+  RiRobot2Line,
+  RiTaskLine,
+  RiTwitterXFill,
+  RiVideoLine,
+};
 
-  return 'lucide';
-}
+const lucideIconRegistry: Record<string, IconComponent> = {
+  Activity,
+  ArrowLeft,
+  ArrowUpRight,
+  Ban,
+  BookOpenText,
+  Box,
+  Brain,
+  Clock,
+  Coins,
+  CreditCard,
+  DollarSign,
+  FileText,
+  Folder,
+  Github,
+  HelpCircle,
+  History,
+  Home,
+  Key,
+  Mail,
+  Menu,
+  MessageCircle,
+  Newspaper,
+  Pencil,
+  Plus,
+  Search,
+  Settings,
+  ShieldCheck,
+  Sparkles,
+  User,
+  Users,
+  Zap,
+};
 
 export function SmartIcon({
   name,
@@ -22,60 +143,9 @@ export function SmartIcon({
   className?: string;
   [key: string]: any;
 }) {
-  const library = detectIconLibrary(name);
-  const cacheKey = `${library}-${name}`;
+  const Icon = name?.startsWith('Ri')
+    ? remixIconRegistry[name] || RiQuestionLine
+    : lucideIconRegistry[name] || HelpCircle;
 
-  if (!iconCache[cacheKey]) {
-    if (library === 'ri') {
-      // React Icons (Remix Icons)
-      iconCache[cacheKey] = lazy(async () => {
-        try {
-          const module = await import('react-icons/ri');
-          const IconComponent = module[name as keyof typeof module];
-          if (IconComponent) {
-            return { default: IconComponent as ComponentType<any> };
-          } else {
-            console.warn(
-              `Icon "${name}" not found in react-icons/ri, using fallback`
-            );
-            return { default: module.RiQuestionLine as ComponentType<any> };
-          }
-        } catch (error) {
-          console.error(`Failed to load react-icons/ri:`, error);
-          const fallbackModule = await import('react-icons/ri');
-          return {
-            default: fallbackModule.RiQuestionLine as ComponentType<any>,
-          };
-        }
-      });
-    } else {
-      // Lucide React (default)
-      iconCache[cacheKey] = lazy(async () => {
-        try {
-          const module = await import('lucide-react');
-          const IconComponent = module[name as keyof typeof module];
-          if (IconComponent) {
-            return { default: IconComponent as ComponentType<any> };
-          } else {
-            console.warn(
-              `Icon "${name}" not found in lucide-react, using fallback`
-            );
-            return { default: module.HelpCircle as ComponentType<any> };
-          }
-        } catch (error) {
-          console.error(`Failed to load lucide-react:`, error);
-          const fallbackModule = await import('lucide-react');
-          return { default: fallbackModule.HelpCircle as ComponentType<any> };
-        }
-      });
-    }
-  }
-
-  const IconComponent = iconCache[cacheKey];
-
-  return (
-    <Suspense fallback={<div style={{ width: size, height: size }} />}>
-      <IconComponent size={size} className={className} {...props} />
-    </Suspense>
-  );
+  return <Icon size={size} className={className} {...props} />;
 }

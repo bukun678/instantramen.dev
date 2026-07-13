@@ -4,17 +4,10 @@ import { setRequestLocale } from 'next-intl/server';
 import {
   getInstantRamenModelBySlug,
   InstantRamenModelPageTemplate,
-  instantRamenModels,
 } from '@/domains/instant-ramen';
 import { getMetadata } from '@/shared/lib/seo';
 
-export const revalidate = 3600;
-
-export function generateStaticParams() {
-  return instantRamenModels.map((model) => ({
-    slug: model.slug,
-  }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,

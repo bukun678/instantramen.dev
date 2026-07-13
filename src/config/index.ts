@@ -1,6 +1,6 @@
 import packageJson from '../../package.json';
 
-import { instantRamenBrandConfig } from '@/domains/instant-ramen';
+import { instantRamenBrandConfig } from '@/domains/instant-ramen/config/brand';
 
 // Note: Environment variables are loaded via dotenv-cli in package.json scripts.
 // Next.js automatically loads .env files in the runtime, so no manual loading is needed here.

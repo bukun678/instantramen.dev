@@ -23,6 +23,9 @@ export default defineConfig({
         light: 'github-light',
         dark: 'github-dark',
       },
+      // Keep the Workers bundle focused on the languages used by our MDX files.
+      langs: ['bash'],
+      experimentalJSEngine: true,
       // Use defaultLanguage for unknown language codes
       defaultLanguage: 'plaintext',
     },

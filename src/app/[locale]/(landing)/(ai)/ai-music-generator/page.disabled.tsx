@@ -1,18 +1,19 @@
+// Preserved ShipAny music demo; disabled from the Instant Ramen MVP Worker.
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';
-import { VideoGenerator } from '@/shared/blocks/generator';
+import { MusicGenerator } from '@/shared/blocks/generator';
 import { getMetadata } from '@/shared/lib/seo';
 import { DynamicPage } from '@/shared/types/blocks/landing';
 
 export const revalidate = 3600;
 
 export const generateMetadata = getMetadata({
-  metadataKey: 'ai.video.metadata',
-  canonicalUrl: '/ai-video-generator',
+  metadataKey: 'ai.music.metadata',
+  canonicalUrl: '/ai-music-generator',
 });
 
-export default async function AiVideoGeneratorPage({
+export default async function AiMusicGeneratorPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
@@ -20,8 +21,8 @@ export default async function AiVideoGeneratorPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  // get ai video data
-  const t = await getTranslations('ai.video');
+  // get ai music data
+  const t = await getTranslations('ai.music');
 
   // build page sections
   const page: DynamicPage = {
@@ -35,7 +36,7 @@ export default async function AiVideoGeneratorPage({
         },
       },
       generator: {
-        component: <VideoGenerator srOnlyTitle={t.raw('generator.title')} />,
+        component: <MusicGenerator srOnlyTitle={t.raw('generator.title')} />,
       },
     },
   };

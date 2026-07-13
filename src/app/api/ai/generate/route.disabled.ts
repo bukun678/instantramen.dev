@@ -1,3 +1,4 @@
+// Preserved ShipAny generic AI API; disabled from the Instant Ramen MVP Worker.
 import { envConfigs } from '@/config';
 import { AIMediaType } from '@/extensions/ai';
 import { getUuid } from '@/shared/lib/hash';

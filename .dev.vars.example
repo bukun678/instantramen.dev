@@ -1,0 +1,28 @@
+# Cloudflare Workers local runtime variables.
+# Copy this file to .dev.vars and replace placeholders locally. Never commit .dev.vars.
+
+NEXTJS_ENV=development
+
+# Public application configuration
+NEXT_PUBLIC_APP_URL=https://instant-ramen.example-account.workers.dev
+NEXT_PUBLIC_APP_NAME=Instant Ramen
+NEXT_PUBLIC_THEME=default
+NEXT_PUBLIC_APPEARANCE=system
+
+# Instant Ramen Supabase Auth
+NEXT_PUBLIC_SUPABASE_URL=https://project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_example
+
+# APIMart (server-side secret)
+APIMART_API_KEY=replace-with-apimart-key
+
+# Supabase Transaction Pooler (server-side secret)
+DATABASE_PROVIDER=postgresql
+DATABASE_URL=postgresql://postgres.project-ref:replace-with-password@aws-0-region.pooler.supabase.com:6543/postgres?sslmode=require
+DB_SCHEMA_FILE=./src/config/db/schema.postgres.ts
+DB_MIGRATIONS_OUT=./src/config/db/migrations
+DB_SINGLETON_ENABLED=false
+DB_MAX_CONNECTIONS=1
+
+# ShipAny Better Auth infrastructure (server-side secret)
+AUTH_SECRET=replace-with-random-secret

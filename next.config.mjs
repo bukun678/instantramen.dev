@@ -1,6 +1,13 @@
 import bundleAnalyzer from '@next/bundle-analyzer';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 import { createMDX } from 'fumadocs-mdx/next';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { fileURLToPath } from 'node:url';
+
+const libsqlUnavailablePath = fileURLToPath(
+  new URL('./src/cloudflare/libsql-client-unavailable.ts', import.meta.url)
+);
+const isPostgresBuild = process.env.DATABASE_PROVIDER === 'postgresql';
 
 const withMDX = createMDX();
 
@@ -15,6 +22,15 @@ const withNextIntl = createNextIntlPlugin({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: process.env.VERCEL ? undefined : 'standalone',
+  serverExternalPackages: ['postgres'],
+  transpilePackages: isPostgresBuild ? ['@libsql/client'] : [],
+  webpack(config, { isServer }) {
+    if (isServer && isPostgresBuild) {
+      config.resolve.alias['@libsql/client'] = libsqlUnavailablePath;
+    }
+
+    return config;
+  },
   reactStrictMode: false,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
@@ -68,5 +84,7 @@ const nextConfig = {
   },
   reactCompiler: true,
 };
+
+initOpenNextCloudflareForDev();
 
 export default withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));

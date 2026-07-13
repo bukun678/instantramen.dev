@@ -1,3 +1,4 @@
+// Preserved ShipAny chat API; disabled from the Instant Ramen MVP Worker.
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import {
   convertToModelMessages,

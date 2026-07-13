@@ -1,3 +1,4 @@
+// Preserved ShipAny blog template; disabled from the Instant Ramen MVP Worker.
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { getThemePage } from '@/core/theme';

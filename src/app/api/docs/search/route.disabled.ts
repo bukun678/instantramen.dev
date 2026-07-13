@@ -1,3 +1,4 @@
+// Preserved ShipAny docs search API; disabled from the Instant Ramen MVP Worker.
 import { createElement } from 'react';
 import { docs } from '@/.source';
 import type { I18nConfig } from 'fumadocs-core/i18n';

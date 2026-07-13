@@ -4,7 +4,6 @@ import {
   GoogleAnalyticsProvider,
   OpenPanelAnalyticsProvider,
   PlausibleAnalyticsProvider,
-  VercelAnalyticsProvider,
 } from '@/extensions/analytics';
 import { Configs, getAllConfigs } from '@/shared/models/config';
 
@@ -45,11 +44,6 @@ export function getAnalyticsManagerWithConfigs(configs: Configs) {
         clientId: configs.openpanel_client_id,
       })
     );
-  }
-
-  // vercel analytics
-  if (configs.vercel_analytics_enabled === 'true') {
-    analytics.addProvider(new VercelAnalyticsProvider({ mode: 'auto' }));
   }
 
   return analytics;

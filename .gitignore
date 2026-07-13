@@ -36,6 +36,9 @@ yarn-error.log*
 .env.development
 .env.test
 .env.production
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
 
 # vercel
 .vercel
@@ -52,6 +55,7 @@ data*
 .open-next
 wrangler.toml
 .wrangler
+cloudflare-env.d.ts
 src/shared/types/cloudflare.d.ts
 
 src/config/db/migrations*
