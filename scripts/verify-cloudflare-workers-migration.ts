@@ -63,6 +63,11 @@ assert.match(wrangler, /"main"\s*:\s*"\.open-next\/worker\.js"/);
 assert.match(wrangler, /"compatibility_date"\s*:\s*"2026-07-13"/);
 assert.match(wrangler, /"nodejs_compat"/);
 assert.match(wrangler, /"global_fetch_strictly_public"/);
+assert.match(
+  wrangler,
+  /"keep_vars"\s*:\s*true/,
+  'Wrangler deploys must preserve dashboard variables and secrets'
+);
 assert.match(wrangler, /"directory"\s*:\s*"\.open-next\/assets"/);
 assert.match(wrangler, /"binding"\s*:\s*"ASSETS"/);
 assert.match(wrangler, /"binding"\s*:\s*"WORKER_SELF_REFERENCE"/);
