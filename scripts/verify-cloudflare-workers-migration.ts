@@ -79,6 +79,11 @@ assert.doesNotMatch(wrangler, /\b(?:r2_buckets|d1_databases|hyperdrive)\b/i);
 assert.doesNotMatch(wrangler, /instantramen\.dev/i);
 
 assert.match(openNext, /defineCloudflareConfig/);
+assert.match(
+  openNext,
+  /buildCommand\s*:\s*['"]pnpm next build --webpack['"]/,
+  'Cloudflare builds must use webpack; Next 16 Turbopack nearly doubles the Worker bundle and exceeds the 3 MiB free-plan limit'
+);
 assert.doesNotMatch(openNext, /r2IncrementalCache|R2IncrementalCache/);
 
 assert.match(
