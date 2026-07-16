@@ -1,10 +1,7 @@
-import { instantRamenBrandConfig } from './brand';
-
 import type { Brand } from '@/shared/types/blocks/common';
-import type {
-  Footer,
-  Header,
-} from '@/shared/types/blocks/landing';
+import type { Footer, Header } from '@/shared/types/blocks/landing';
+
+import { instantRamenBrandConfig } from './brand';
 
 export function getInstantRamenBrandBlock(): Brand {
   return {
@@ -37,6 +34,7 @@ export function applyInstantRamenBrandToLandingLayout({
     header: {
       ...header,
       brand,
+      className: 'instant-ramen-header',
       nav: {
         items: [
           {
@@ -56,6 +54,7 @@ export function applyInstantRamenBrandToLandingLayout({
     footer: {
       ...footer,
       brand,
+      className: 'instant-ramen-footer',
       nav: {
         items: [
           {

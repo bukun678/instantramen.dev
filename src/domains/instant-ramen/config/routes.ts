@@ -1,4 +1,4 @@
-import { instantRamenModels } from '../content/models';
+import { visibleInstantRamenModels } from '../content/models';
 
 export type InstantRamenRouteKind =
   | 'landing'
@@ -49,7 +49,7 @@ export const instantRamenRoutes: Record<
     kind: 'landing',
     title: 'Instant Ramen AI Image Generator',
     description:
-      'Create and edit images with Instant Ramen, a multi-model AI image generation platform for creators.',
+      'Create images from text prompts with Instant Ramen, a focused multi-model AI image generator for creators.',
     sitemap: true,
     priority: 1,
     changeFrequency: 'weekly',
@@ -138,7 +138,7 @@ export const instantRamenRoutes: Record<
 };
 
 export const instantRamenModelRoutes: InstantRamenSitemapRoute[] =
-  instantRamenModels.map((model) => ({
+  visibleInstantRamenModels.map((model) => ({
     key: `model:${model.slug}`,
     path: `/models/${model.slug}`,
     kind: 'model-seo',

@@ -10,6 +10,7 @@ import { envConfigs } from '@/config';
 import { locales } from '@/config/locale';
 import { routing } from '@/core/i18n/config';
 import { ThemeProvider } from '@/core/theme/provider';
+import { instantRamenBrandConfig } from '@/domains/instant-ramen/config/brand';
 import { UtmCapture } from '@/shared/blocks/common/utm-capture';
 import { Toaster } from '@/shared/components/ui/sonner';
 import { AppContextProvider } from '@/shared/contexts/app';
@@ -61,7 +62,7 @@ export default async function LocaleLayout({
   const isProduction = process.env.NODE_ENV === 'production';
   const isDebug = process.env.NEXT_PUBLIC_DEBUG === 'true';
 
-  const appUrl = envConfigs.app_url || '';
+  const appUrl = instantRamenBrandConfig.appUrl;
 
   let adsMetaTags = null;
   let adsHeadScripts = null;

@@ -30,6 +30,11 @@ const requiredModelFields = [
   'visible',
   'allowGeneration',
   'showInGenerator',
+  'sortOrder',
+  'featured',
+  'recommended',
+  'defaultSelected',
+  'indexable',
   'shortDescription',
   'heroTitle',
   'heroDescription',
@@ -50,10 +55,6 @@ function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
     throw new Error(message);
   }
-}
-
-function normalize(value: unknown) {
-  return JSON.stringify(value).toLowerCase().replace(/\s+/g, ' ');
 }
 
 assert(
@@ -78,10 +79,7 @@ for (const slug of requiredModelSlugs) {
     model!.status === 'available' || model!.status === 'coming-soon',
     `${slug} status must be available or coming-soon.`
   );
-  assert(
-    model!.features.length > 0,
-    `${slug} must define reusable features.`
-  );
+  assert(model!.features.length > 0, `${slug} must define reusable features.`);
   assert(
     model!.strengths.length > 0,
     `${slug} must define reusable strengths.`
@@ -101,10 +99,6 @@ for (const slug of requiredModelSlugs) {
   assert(
     model!.seo.canonical === `/models/${slug}`,
     `${slug} canonical must be data-driven from slug.`
-  );
-  assert(
-    normalize(model).includes('multi-model ai image generation platform'),
-    `${slug} must preserve Instant Ramen multi-model positioning.`
   );
 }
 
@@ -128,9 +122,15 @@ assert(
 for (const slug of ['gpt-image-2', 'nano-banana']) {
   const model = getInstantRamenModelBySlug(slug)!;
 
-  assert(model.availability === 'available', `${slug} availability must be available.`);
+  assert(
+    model.availability === 'available',
+    `${slug} availability must be available.`
+  );
   assert(model.allowGeneration, `${slug} must be generation-enabled.`);
-  assert(model.showInGenerator, `${slug} must appear in the MVP generator entry.`);
+  assert(
+    model.showInGenerator,
+    `${slug} must appear in the MVP generator entry.`
+  );
 }
 
 for (const slug of ['flux', 'imagen', 'recraft', 'ideogram']) {
@@ -142,7 +142,9 @@ for (const slug of ['flux', 'imagen', 'recraft', 'ideogram']) {
   );
 }
 
-for (const slug of requiredModelSlugs.filter((slug) => slug !== 'instant-ramen')) {
+for (const slug of requiredModelSlugs.filter(
+  (slug) => slug !== 'instant-ramen'
+)) {
   assert(
     getInstantRamenModelBySlug(slug)!.status === 'available',
     `${slug} must be available.`
@@ -153,10 +155,25 @@ const sitemapModelPaths = instantRamenSitemapRoutes
   .filter((route) => route.kind === 'model-seo')
   .map((route) => route.path);
 
-for (const slug of requiredModelSlugs) {
+for (const slug of ['gpt-image-2', 'nano-banana', 'instant-ramen']) {
   assert(
     sitemapModelPaths.includes(`/models/${slug}`),
-    `${slug} must be included in sitemap routes through model config.`
+    `${slug} must be included in sitemap routes through the shared model config.`
+  );
+  assert(
+    getInstantRamenModelBySlug(slug)!.indexable,
+    `${slug} must remain indexable during the MVP.`
+  );
+}
+
+for (const slug of ['flux', 'imagen', 'recraft', 'ideogram']) {
+  assert(
+    !sitemapModelPaths.includes(`/models/${slug}`),
+    `${slug} must stay out of the MVP sitemap.`
+  );
+  assert(
+    !getInstantRamenModelBySlug(slug)!.indexable,
+    `${slug} must remain retained but non-indexable.`
   );
 }
 
@@ -183,7 +200,10 @@ assert(
 );
 
 const modelPageTemplate = readFileSync(
-  join(projectRoot, 'src/domains/instant-ramen/components/model-page-template.tsx'),
+  join(
+    projectRoot,
+    'src/domains/instant-ramen/components/model-page-template.tsx'
+  ),
   'utf8'
 );
 assert(
@@ -200,7 +220,10 @@ assert(
   'Model page CTA must not send coming soon models to a misleading create URL.'
 );
 
-const modelsIndexFile = readFileSync(join(projectRoot, modelsIndexRoutePath), 'utf8');
+const modelsIndexFile = readFileSync(
+  join(projectRoot, modelsIndexRoutePath),
+  'utf8'
+);
 assert(
   modelsIndexFile.includes('InstantRamenModelsIndexPage'),
   '/models route must use the shared models index component.'

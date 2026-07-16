@@ -1,6 +1,8 @@
 import { instantRamenBrandConfig } from '../config/brand';
-import { instantRamenRoutes } from '../config/routes';
-import type { InstantRamenRouteKey } from '../config/routes';
+import {
+  instantRamenRoutes,
+  type InstantRamenRouteKey,
+} from '../config/routes';
 import type { InstantRamenPageContentConfig } from './types';
 
 const productName = instantRamenBrandConfig.productName;
@@ -48,33 +50,29 @@ export const instantRamenPageContent: Record<
     seo: seo({
       routeKey: 'home',
       title: 'Instant Ramen AI Image Generator | GPT Image 2 & Nano Banana 2',
-      description:
-        `Generate AI images from text prompts with ${productName}. Use GPT Image 2 and Nano Banana 2 today, with the ${productName} model coming soon.`,
+      description: `Generate AI images from text prompts with ${productName}. Use GPT Image 2 and Nano Banana 2 today, with the ${productName} model coming soon.`,
       keywords:
         'Instant Ramen, AI image generator, GPT Image 2, Nano Banana 2, text to image, AI image generation',
       noIndex: false,
     }),
-    eyebrow: `${productName} Image Model · Coming Soon`,
-    headline: `${productName} AI Image Generator`,
-    summary:
-      `Create and edit images with leading AI models. ${productName} is an AI image generation platform, not a single-model site, with Text to Image, Image Editing, and future provider expansion built into the product direction.`,
-    primaryCta: { label: 'Start creating', href: '/create' },
-    secondaryCta: { label: 'Explore models', href: '/models/instant-ramen' },
+    eyebrow: `${productName} · AI Image Generator`,
+    headline: 'Create the image in your head.',
+    summary: 'Describe it. Choose a model. Get your image in seconds.',
+    primaryCta: { label: 'Create an image', href: '#generator' },
+    secondaryCta: { label: 'Explore models', href: '#models' },
     sections: [
       {
         id: 'hero',
         label: 'AI Image Generation Platform',
         title: `${productName} is your multi-model image workspace`,
-        description:
-          `${productName} brings Text to Image and Image Editing into one creator workflow. The homepage should make it clear this is not a single-model website; it is the front door for a broader AI image generation platform.`,
+        description: `${productName} brings Text to Image and Image Editing into one creator workflow. The homepage should make it clear this is not a single-model website; it is the front door for a broader AI image generation platform.`,
         cta: { label: 'Start creating', href: '/create' },
       },
       {
         id: 'what-is-instant-ramen',
         label: 'What is Instant Ramen?',
         title: `What is ${productName}?`,
-        description:
-          `${productName} is a new AI image generation model direction focused on creating high-quality images from text prompts. The ${productName} AI Image Generator already lets users generate AI images using GPT Image 2 and Nano Banana 2, while preparing support for the ${productName} model in the future.`,
+        description: `${productName} is a new AI image generation model direction focused on creating high-quality images from text prompts. The ${productName} AI Image Generator already lets users generate AI images using GPT Image 2 and Nano Banana 2, while preparing support for the ${productName} model in the future.`,
         items: [
           {
             title: 'AI Image Generator',
@@ -97,8 +95,7 @@ export const instantRamenPageContent: Record<
         id: 'supported-models',
         label: 'Supported Models',
         title: 'Generate with GPT Image 2 and Nano Banana 2',
-        description:
-          `${productName} keeps the first version simple: two available image models for generation, plus the Instant Ramen model reserved as a Coming Soon option.`,
+        description: `${productName} keeps the first version simple: two available image models for generation, plus the Instant Ramen model reserved as a Coming Soon option.`,
         items: [
           {
             title: 'GPT Image 2',
@@ -214,8 +211,7 @@ export const instantRamenPageContent: Record<
         id: 'use-cases',
         label: 'Use Cases',
         title: 'Use cases for creators and teams',
-        description:
-          `${productName} is designed for practical image generation tasks where speed, iteration, and clear output matter.`,
+        description: `${productName} is designed for practical image generation tasks where speed, iteration, and clear output matter.`,
         items: [
           {
             title: 'Social Media',
@@ -258,23 +254,19 @@ export const instantRamenPageContent: Record<
         faq: [
           {
             question: `What is ${productName}?`,
-            answer:
-              `${productName} is an AI Image Generator for creating images from text prompts. It currently supports GPT Image 2 and Nano Banana 2 while preparing support for the Instant Ramen model in the future.`,
+            answer: `${productName} is an AI Image Generator for creating images from text prompts. It currently supports GPT Image 2 and Nano Banana 2 while preparing support for the Instant Ramen model in the future.`,
           },
           {
             question: 'What is GPT Image 2?',
-            answer:
-              `GPT Image 2 is one of the available generation models in ${productName}. Users can choose it from the homepage model selector before generating an image.`,
+            answer: `GPT Image 2 is one of the available generation models in ${productName}. Users can choose it from the homepage model selector before generating an image.`,
           },
           {
             question: 'What is Nano Banana 2?',
-            answer:
-              `Nano Banana 2 is another available image generation model in ${productName}. It is presented as a model option, not as a separate official model website.`,
+            answer: `Nano Banana 2 is another available image generation model in ${productName}. It is presented as a model option, not as a separate official model website.`,
           },
           {
             question: 'Which AI models are supported?',
-            answer:
-              `${productName} currently shows GPT Image 2 and Nano Banana 2 as available generation models. The Instant Ramen model is listed as Coming Soon.`,
+            answer: `${productName} currently shows GPT Image 2 and Nano Banana 2 as available generation models. The Instant Ramen model is listed as Coming Soon.`,
           },
           {
             question: 'Is Instant Ramen available now?',
@@ -283,8 +275,7 @@ export const instantRamenPageContent: Record<
           },
           {
             question: 'Can I generate AI images for free?',
-            answer:
-              `${productName} is designed with a free-to-try entry and a credit-based path for generation. Exact pricing and credit rules can evolve as the MVP is validated.`,
+            answer: `${productName} is designed with a free-to-try entry and a credit-based path for generation. Exact pricing and credit rules can evolve as the MVP is validated.`,
           },
           {
             question: 'Can I download generated images?',
@@ -346,8 +337,7 @@ export const instantRamenPageContent: Record<
     }),
     eyebrow: 'Text to Image · SEO Tool Page',
     headline: 'AI Image Generator for prompt driven creation',
-    summary:
-      `${productName} turns prompts into images across a future-ready provider layer. This SEO page positions ${productName} as a multi-model AI image generation platform, not a single-model site.`,
+    summary: `${productName} turns prompts into images across a future-ready provider layer. This SEO page positions ${productName} as a multi-model AI image generation platform, not a single-model site.`,
     primaryCta: { label: 'Open Create', href: '/create' },
     secondaryCta: { label: 'Compare models', href: '/models/instant-ramen' },
     sections: [
@@ -363,8 +353,7 @@ export const instantRamenPageContent: Record<
         id: 'value-proposition',
         label: 'Multi-model platform',
         title: `${productName} is built beyond one model`,
-        description:
-          `${productName} is a multi-model AI image generation platform, not a single-model website. The page should introduce prompt driven generation while reserving provider flexibility for Nano Banana 2, GPT Image 2, Instant Ramen, and future image models.`,
+        description: `${productName} is a multi-model AI image generation platform, not a single-model website. The page should introduce prompt driven generation while reserving provider flexibility for Nano Banana 2, GPT Image 2, Instant Ramen, and future image models.`,
         items: [
           {
             title: 'Prompt driven generation',
@@ -440,8 +429,7 @@ export const instantRamenPageContent: Record<
         faq: [
           {
             question: `Is ${productName} only a Nano Banana 2 site?`,
-            answer:
-              `No. ${productName} is intentionally positioned as a multi-model AI image generation platform, not a single-model site.`,
+            answer: `No. ${productName} is intentionally positioned as a multi-model AI image generation platform, not a single-model site.`,
           },
           {
             question: 'Does this page call a real AI provider today?',
@@ -459,8 +447,7 @@ export const instantRamenPageContent: Record<
         id: 'final-cta',
         label: 'CTA',
         title: 'Start with a prompt, then build a repeatable image workflow',
-        description:
-          `${productName} connects SEO acquisition to a Create workspace where prompt driven generation, provider selection, credits, and history can grow together.`,
+        description: `${productName} connects SEO acquisition to a Create workspace where prompt driven generation, provider selection, credits, and history can grow together.`,
         cta: { label: 'Open Create', href: '/create' },
       },
     ],
@@ -479,8 +466,7 @@ export const instantRamenPageContent: Record<
     }),
     eyebrow: 'Image Editing · SEO Tool Page',
     headline: 'AI Image Editor for existing images',
-    summary:
-      `${productName} helps creators move from an existing image to a new visual direction with prompt-based image editing. This SEO page introduces Image Editing and Image to Image as part of a broader provider-ready image platform.`,
+    summary: `${productName} helps creators move from an existing image to a new visual direction with prompt-based image editing. This SEO page introduces Image Editing and Image to Image as part of a broader provider-ready image platform.`,
     primaryCta: { label: 'Open editor', href: '/create/edit' },
     secondaryCta: { label: 'Explore generator', href: '/ai-image-generator' },
     sections: [
@@ -496,8 +482,7 @@ export const instantRamenPageContent: Record<
         id: 'value-proposition',
         label: 'Prompt-based editing',
         title: 'Image editing should stay connected to generation',
-        description:
-          `${productName} is an AI image generation platform, not a single-model site. Image Editing, Image to Image, provider capabilities, and model selection should all share the same product foundation.`,
+        description: `${productName} is an AI image generation platform, not a single-model site. Image Editing, Image to Image, provider capabilities, and model selection should all share the same product foundation.`,
         items: [
           {
             title: 'Edit existing images with prompts',
@@ -573,8 +558,7 @@ export const instantRamenPageContent: Record<
         faq: [
           {
             question: 'Is Image Editing separate from generation?',
-            answer:
-              `No. ${productName} treats Image Editing as part of the same AI image generation platform, sharing model, provider, credits, and history concepts over time.`,
+            answer: `No. ${productName} treats Image Editing as part of the same AI image generation platform, sharing model, provider, credits, and history concepts over time.`,
           },
           {
             question: 'Does this support Image to Image?',
@@ -583,8 +567,7 @@ export const instantRamenPageContent: Record<
           },
           {
             question: 'Is this tied to one provider?',
-            answer:
-              `No. ${productName} is not a single-model site. Provider capabilities are designed to stay decoupled from the page UI.`,
+            answer: `No. ${productName} is not a single-model site. Provider capabilities are designed to stay decoupled from the page UI.`,
           },
         ],
       },
@@ -612,8 +595,7 @@ export const instantRamenPageContent: Record<
     }),
     eyebrow: 'Models Framework',
     headline: 'AI image models inside Instant Ramen',
-    summary:
-      `${productName} organizes model SEO around reusable model configuration. New model pages should come from data, not copied components.`,
+    summary: `${productName} organizes model SEO around reusable model configuration. New model pages should come from data, not copied components.`,
   },
   create: {
     routeKey: 'create',

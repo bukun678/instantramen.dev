@@ -16,10 +16,11 @@ export default function robots(): MetadataRoute.Robots {
         '/settings/*',
         '/activity/*',
         '/admin/*',
+        '/auth/*',
+        '/create/history',
         '/api/*',
       ],
     },
     sitemap: `${appUrl}/sitemap.xml`,
   };
 }
-

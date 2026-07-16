@@ -20,7 +20,7 @@ export default async function LandingLayout({
   const Footer = await getThemeBlock('footer');
 
   return (
-    <div className="h-screen w-screen">
+    <div className="min-h-screen w-full">
       <InstantRamenAuthProvider>
         <Header header={header} />
         {children}

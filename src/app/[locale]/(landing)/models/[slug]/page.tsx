@@ -1,34 +1,37 @@
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
-
 import {
   getInstantRamenModelBySlug,
   InstantRamenModelPageTemplate,
 } from '@/domains/instant-ramen';
-import { getMetadata } from '@/shared/lib/seo';
+import { setRequestLocale } from 'next-intl/server';
+
+import { buildInstantRamenMetadata } from '@/shared/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const model = getInstantRamenModelBySlug(slug);
 
   if (!model) {
     return {};
   }
 
-  return getMetadata({
-    title: model.seo.title,
-    description: model.seo.description,
-    keywords: model.seo.keywords,
-    canonicalUrl: model.seo.canonical,
-    openGraph: model.seo.openGraph,
-    noIndex: model.seo.noIndex,
-  });
+  return await buildInstantRamenMetadata(
+    {
+      title: model.seo.title,
+      description: model.seo.description,
+      keywords: model.seo.keywords,
+      canonicalUrl: model.seo.canonical,
+      openGraph: model.seo.openGraph,
+      noIndex: model.seo.noIndex,
+    },
+    locale
+  );
 }
 
 export default async function ModelPage({

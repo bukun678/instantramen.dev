@@ -1,4 +1,5 @@
 import { instantRamenBrandConfig } from '../config/brand';
+import { getInstantRamenModelArtwork } from './artwork';
 import type {
   InstantRamenModelAvailability,
   InstantRamenModelConfig,
@@ -14,11 +15,13 @@ function modelSeo({
   title,
   description,
   keywords,
+  indexable,
 }: {
   slug: string;
   title: string;
   description: string;
   keywords: string;
+  indexable: boolean;
 }) {
   return {
     title,
@@ -28,11 +31,11 @@ function modelSeo({
     openGraph: {
       title,
       description,
-      imagePath: instantRamenBrandConfig.previewImagePath,
-      imageAlt: instantRamenBrandConfig.openGraph.imageAlt,
+      imagePath: getInstantRamenModelArtwork(slug)[0].src,
+      imageAlt: getInstantRamenModelArtwork(slug)[0].alt,
       type: 'website' as const,
     },
-    noIndex: false,
+    noIndex: !indexable,
   };
 }
 
@@ -40,6 +43,11 @@ function buildModel({
   slug,
   name,
   displayName,
+  sortOrder = 999,
+  featured = false,
+  recommended = false,
+  defaultSelected = false,
+  indexable = false,
   provider,
   providerModelId,
   providerStatus = 'planned',
@@ -57,6 +65,8 @@ function buildModel({
   strengths,
   limitations,
   bestFor,
+  howTo,
+  difference,
   useCases,
   faq,
   supportedModes,
@@ -71,6 +81,11 @@ function buildModel({
   slug: string;
   name: string;
   displayName: string;
+  sortOrder?: number;
+  featured?: boolean;
+  recommended?: boolean;
+  defaultSelected?: boolean;
+  indexable?: boolean;
   provider: string;
   providerModelId: string;
   providerStatus?: InstantRamenProviderStatus;
@@ -88,6 +103,8 @@ function buildModel({
   strengths: string[];
   limitations: string[];
   bestFor: string[];
+  howTo?: InstantRamenModelConfig['howTo'];
+  difference?: string;
   useCases: InstantRamenModelConfig['useCases'];
   faq: InstantRamenModelConfig['faq'];
   supportedModes: InstantRamenSupportedMode[];
@@ -103,6 +120,11 @@ function buildModel({
     slug,
     name,
     displayName,
+    sortOrder,
+    featured,
+    recommended,
+    defaultSelected,
+    indexable,
     provider,
     providerModelId,
     providerStatus,
@@ -113,14 +135,32 @@ function buildModel({
     allowGeneration,
     showInGenerator,
     shortDescription,
-    description:
-      `${description} ${productName} presents this model inside a multi-model AI image generation platform, not as an official single-model website.`,
+    description,
     heroTitle,
     heroDescription,
     features,
     strengths,
     limitations,
     bestFor,
+    howTo: howTo ?? [
+      {
+        title: 'Write a prompt',
+        description:
+          'Describe the subject, composition, mood, and visual style.',
+      },
+      {
+        title: 'Choose the model',
+        description: `Select ${displayName} when it is available in the generator.`,
+      },
+      {
+        title: 'Generate and review',
+        description:
+          'Create the image, review the result, and download it when ready.',
+      },
+    ],
+    difference:
+      difference ??
+      `${displayName} is one option in ${productName}, a multi-model AI image generation platform.`,
     useCases,
     faq,
     supportedModes,
@@ -131,6 +171,7 @@ function buildModel({
       title: seoTitle,
       description: seoDescription,
       keywords,
+      indexable,
     }),
     seoTitle,
     seoDescription,
@@ -150,6 +191,11 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     slug: 'instant-ramen',
     name: 'instant-ramen',
     displayName: 'Instant Ramen',
+    sortOrder: 3,
+    featured: false,
+    recommended: false,
+    defaultSelected: false,
+    indexable: true,
     provider: 'instant-ramen',
     providerModelId: 'instant-ramen-image',
     providerStatus: 'planned',
@@ -157,32 +203,51 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     allowGeneration: false,
     showInGenerator: true,
     shortDescription:
-      'The planned flagship image model slot for the Instant Ramen product.',
+      'A future first-party image model concept for the Instant Ramen workspace.',
     description:
-      'Instant Ramen is reserved as the future flagship model for image generation and editing workflows.',
-    heroTitle: 'Instant Ramen Model for future AI image workflows',
+      'Instant Ramen is the planned first-party AI image model for this workspace. It is not available for generation yet, so this page documents the product direction without presenting concept artwork as model output.',
+    heroTitle: 'Instant Ramen AI Image Model — Coming Soon',
     heroDescription:
-      'The Instant Ramen model is coming soon and will sit beside other providers in the same creator workspace.',
+      'The Instant Ramen image model is still in development. Explore the concept, then create today with GPT Image 2 or Nano Banana 2.',
     features: [
-      'Reserved for Text to Image and Image Editing',
-      'Designed for future provider capability mapping',
-      'Built to work with credits, history, and prompt reuse',
+      'Planned text-to-image workflow',
+      'Future model-specific capability mapping',
+      'Designed to join the same generator and history flow',
     ],
     strengths: [
-      'Ownable product positioning',
-      'Clear roadmap slot for future differentiation',
-      'Fits the broader Instant Ramen model marketplace',
+      'A clear first-party product direction',
+      'One shared workspace instead of another separate tool',
+      'A roadmap for future model-specific experiences',
     ],
     limitations: [
       'Not publicly available yet',
-      'No real provider execution is connected in this phase',
-      'Quality and pricing will be finalized later',
+      'Concept previews are not generated by the Instant Ramen model',
+      'Capabilities, quality, pricing, and launch timing are not announced',
     ],
     bestFor: [
-      'Future Instant Ramen native generation',
-      'Brand-led image workflows',
-      'Long-term SEO and product differentiation',
+      'Following the Instant Ramen model roadmap',
+      'Understanding the planned product direction',
+      'Finding available alternatives while the model is in development',
     ],
+    howTo: [
+      {
+        title: 'Explore the concept',
+        description:
+          'Review the planned role of the Instant Ramen model and its concept previews.',
+      },
+      {
+        title: 'Create with an available model',
+        description:
+          'Use GPT Image 2 or Nano Banana 2 in the current text-to-image generator.',
+      },
+      {
+        title: 'Return for launch updates',
+        description:
+          'The generator will enable Instant Ramen only after the model is actually available.',
+      },
+    ],
+    difference:
+      'Unlike GPT Image 2 and Nano Banana 2, Instant Ramen is a planned first-party model and cannot generate images today. Its examples are labeled as concepts, not model results.',
     useCases: [
       {
         title: 'Native Instant Ramen generation',
@@ -199,29 +264,43 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       {
         question: 'Is the Instant Ramen model available now?',
         answer:
-          'Not yet. This model page is a coming-soon SEO and product slot inside the multi-model platform.',
+          'No. The Instant Ramen model is marked Coming Soon and cannot be selected for generation.',
       },
       {
-        question: 'Is this the whole website?',
+        question: 'Are the images on this page generated by Instant Ramen?',
         answer:
-          `No. ${productName} is a multi-model AI image generation platform, and Instant Ramen is one model slot within it.`,
+          'No. They are clearly labeled concept previews or creative examples because the model is not available.',
+      },
+      {
+        question: 'What can I use while Instant Ramen is coming soon?',
+        answer:
+          'You can generate images now with GPT Image 2 or Nano Banana 2 from the same Instant Ramen generator.',
+      },
+      {
+        question: 'Will Instant Ramen replace the other models?',
+        answer: `The plan is to keep ${productName} as a multi-model AI image generation platform, with the first-party model joining other useful options.`,
       },
     ],
-    supportedModes: ['text-to-image', 'image-to-image', 'image-editing'],
+    supportedModes: ['text-to-image'],
     creditCost: 10,
     seoTitle: 'Instant Ramen AI Image Model',
     seoDescription:
-      'Learn about the coming soon Instant Ramen image model inside a multi-model AI image generation platform.',
+      'Explore the coming soon Instant Ramen AI image model, see concept previews, and use available image generators while it is in development.',
     keywords:
-      'Instant Ramen model, AI image model, multi-model AI image generation platform',
-    supportsImageInput: true,
-    supportsMaskInput: true,
+      'Instant Ramen AI, Instant Ramen image generator, Instant Ramen AI model, coming soon AI image model',
+    supportsImageInput: false,
+    supportsMaskInput: false,
     supportsNegativePrompt: false,
   }),
   buildModel({
     slug: 'gpt-image-2',
     name: 'gpt-image-2',
     displayName: 'GPT Image 2',
+    sortOrder: 1,
+    featured: true,
+    recommended: true,
+    defaultSelected: true,
+    indexable: true,
     provider: 'apimart',
     providerModelId: 'gpt-image-2',
     status: 'available',
@@ -229,32 +308,50 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     allowGeneration: true,
     showInGenerator: true,
     shortDescription:
-      'A premium image model option for generation, editing, and high-fidelity visual iteration.',
+      'A text-to-image model for detailed prompts, polished scenes, and visual iteration.',
     description:
-      'GPT Image 2 is positioned as a premium model option for precise image generation and editing.',
-    heroTitle: 'GPT Image 2 for high-fidelity AI image creation',
-    heroDescription:
-      `Use GPT Image 2 through ${productName} as one provider option inside a multi-model creator workflow.`,
+      'GPT Image 2 is available in Instant Ramen for text-to-image generation. Write a prompt, choose an aspect ratio, and follow the generation task until the image is ready to download.',
+    heroTitle: 'GPT Image 2 Generator for Detailed AI Images',
+    heroDescription: `Use the GPT Image 2 generator inside ${productName} for prompt-driven image creation with multiple aspect ratios and a focused result workflow.`,
     features: [
-      'Text to Image workflows',
-      'Image to Image and editing-ready positioning',
-      'Premium model slot for detailed outputs',
+      'Text-to-image generation from natural-language prompts',
+      'Square, portrait, landscape, and vertical aspect ratios',
+      'Asynchronous generation status and downloadable results',
     ],
     strengths: [
-      'Strong general-purpose image understanding',
-      'Useful for precise prompt following',
-      'Fits premium creator workflows',
+      'Suited to prompts with multiple visual details',
+      'Useful for polished product and editorial concepts',
+      'A focused option for deliberate visual iteration',
     ],
     limitations: [
-      'Provider availability may change',
-      'Final quality and pricing depend on integration details',
-      'Not an official OpenAI website',
+      'The current Instant Ramen flow supports text input only',
+      'Results can vary between generations and prompts',
+      'Generation uses credits and depends on provider availability',
     ],
     bestFor: [
       'High-fidelity concept generation',
       'Precise visual iteration',
       'Creator and marketing assets',
     ],
+    howTo: [
+      {
+        title: 'Describe the image',
+        description:
+          'Include the subject, composition, lighting, material, mood, and camera direction you want.',
+      },
+      {
+        title: 'Choose GPT Image 2',
+        description:
+          'Select GPT Image 2 and pick the aspect ratio that matches the intended use.',
+      },
+      {
+        title: 'Generate and download',
+        description:
+          'Start the task, wait for the result panel to finish, then download the generated image.',
+      },
+    ],
+    difference:
+      'GPT Image 2 is the recommended default when you want a deliberate, detail-rich prompt workflow. Nano Banana 2 is positioned as the faster option for broad creative iteration.',
     useCases: [
       {
         title: 'Campaign visuals',
@@ -262,38 +359,51 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
           'Generate polished visual directions for ads, landing pages, and launch assets.',
       },
       {
-        title: 'Image editing',
+        title: 'Editorial concepts',
         description:
-          'Prepare source-image workflows where prompt following matters.',
+          'Explore detailed scenes, feature imagery, and art direction from a written brief.',
       },
     ],
     faq: [
       {
-        question: `Is ${productName} the official GPT Image 2 website?`,
-        answer:
-          `No. ${productName} is an independent multi-model AI image generation platform that can present GPT Image 2 as one model option.`,
+        question: 'What is GPT Image 2?',
+        answer: `GPT Image 2 is an available text-to-image model in ${productName}. It turns written prompts into image generation tasks and downloadable results.`,
       },
       {
-        question: 'Can GPT Image 2 be used for editing?',
+        question: 'How do I use the GPT Image 2 generator?',
         answer:
-          'The model page reserves Image Editing and Image to Image positioning; real provider execution comes later.',
+          'Open the generator, choose GPT Image 2, enter a prompt, select an aspect ratio, and start generation.',
+      },
+      {
+        question: 'Does the current GPT Image 2 flow support image editing?',
+        answer:
+          'No. The current MVP exposes text-to-image generation. Image editing is not part of this page or generator yet.',
+      },
+      {
+        question: `Is ${productName} the official GPT Image 2 website?`,
+        answer: `No. ${productName} is an independent multi-model AI image generation platform that offers GPT Image 2 as one model option.`,
       },
     ],
-    supportedModes: ['text-to-image', 'image-to-image', 'image-editing'],
+    supportedModes: ['text-to-image'],
     creditCost: 8,
-    seoTitle: 'GPT Image 2 AI Image Model',
+    seoTitle: 'GPT Image 2 Generator Online',
     seoDescription:
-      'Explore GPT Image 2 as an available model inside Instant Ramen, a multi-model AI image generation platform.',
+      'Use the GPT Image 2 generator online for prompt-driven AI images, multiple aspect ratios, task status, and downloadable results.',
     keywords:
-      'GPT Image 2, OpenAI image model, AI image generation, AI image editing',
-    supportsImageInput: true,
-    supportsMaskInput: true,
+      'GPT Image 2 generator, GPT Image 2 image generator, GPT Image 2 online, AI image generation',
+    supportsImageInput: false,
+    supportsMaskInput: false,
     supportsNegativePrompt: false,
   }),
   buildModel({
     slug: 'nano-banana',
     name: 'nano-banana',
     displayName: 'Nano Banana 2',
+    sortOrder: 2,
+    featured: true,
+    recommended: false,
+    defaultSelected: false,
+    indexable: true,
     provider: 'apimart',
     providerModelId: 'gemini-3.1-flash-image-preview',
     status: 'available',
@@ -301,32 +411,50 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     allowGeneration: true,
     showInGenerator: true,
     shortDescription:
-      'A fast image model option for prompt-driven generation and creative iteration.',
+      'A fast text-to-image option for creative prompts, visual exploration, and quick iterations.',
     description:
-      'Nano Banana 2 is treated as one available model option for image generation and editing workflows.',
-    heroTitle: 'Nano Banana 2 for fast AI image generation',
-    heroDescription:
-      `Use Nano Banana 2 inside ${productName} without making the whole product a single-model site.`,
+      'Nano Banana 2 is available in Instant Ramen for text-to-image generation. It gives creators a direct way to explore prompt ideas, compare visual directions, and download finished results.',
+    heroTitle: 'Nano Banana 2 AI Image Generator',
+    heroDescription: `Use Nano Banana 2 inside ${productName} for fast prompt-driven image generation and creative visual iteration.`,
     features: [
-      'Prompt driven Text to Image',
-      'Creative iteration workflows',
-      'Model page ready for future provider execution',
+      'Text-to-image generation from a written prompt',
+      'Multiple aspect ratios for common creative formats',
+      'Task polling, result preview, and download',
     ],
     strengths: [
-      'Fast creative exploration',
-      'Good fit for trend-driven search demand',
-      'Useful as one model in a broader provider catalog',
+      'Suited to quick creative exploration',
+      'Useful for testing varied visual directions',
+      'A practical option for lightweight prompt iteration',
     ],
     limitations: [
-      'Not the only model in Instant Ramen',
-      'Provider behavior must be validated during integration',
-      'Exact generation limits are not finalized in this phase',
+      'The current Instant Ramen flow supports text input only',
+      'Results depend on prompt clarity and may vary',
+      'Generation uses credits and depends on provider availability',
     ],
     bestFor: [
       'Quick creative drafts',
       'Social content ideas',
       'Prompt experimentation',
     ],
+    howTo: [
+      {
+        title: 'Start with one clear idea',
+        description:
+          'Describe the subject, visual style, mood, and composition in a concise prompt.',
+      },
+      {
+        title: 'Choose Nano Banana 2',
+        description:
+          'Select Nano Banana 2 and choose the aspect ratio for your intended canvas.',
+      },
+      {
+        title: 'Generate, compare, and save',
+        description:
+          'Create the image, refine the prompt when needed, and download the result you want to keep.',
+      },
+    ],
+    difference:
+      'Nano Banana 2 is positioned for fast creative exploration and style variation. GPT Image 2 is the default option for more deliberate, detail-heavy prompt work.',
     useCases: [
       {
         title: 'Thumbnail exploration',
@@ -341,24 +469,32 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     ],
     faq: [
       {
-        question: 'Is Instant Ramen just a Nano Banana 2 website?',
-        answer:
-          `No. Nano Banana 2 is one available model inside ${productName}, a multi-model AI image generation platform.`,
+        question: 'What is Nano Banana 2?',
+        answer: `Nano Banana 2 is an available AI image model in ${productName} for turning text prompts into generated images.`,
       },
       {
-        question: 'Does this page call Nano Banana 2 now?',
+        question: 'How do I use the Nano Banana image generator?',
         answer:
-          'No. This phase creates the SEO model framework only; provider execution is added later.',
+          'Open the generator, choose Nano Banana 2, write a prompt, select an aspect ratio, and start generation.',
+      },
+      {
+        question: 'Can I download Nano Banana 2 results?',
+        answer:
+          'Yes. A download action appears after the task returns a completed image.',
+      },
+      {
+        question: 'Is Instant Ramen a single-model Nano Banana website?',
+        answer: `No. Nano Banana 2 is one available option inside ${productName}, alongside GPT Image 2 and the coming-soon Instant Ramen model.`,
       },
     ],
-    supportedModes: ['text-to-image', 'image-to-image', 'image-editing'],
+    supportedModes: ['text-to-image'],
     creditCost: 4,
-    seoTitle: 'Nano Banana 2 AI Image Model',
+    seoTitle: 'Nano Banana 2 AI Image Generator Online',
     seoDescription:
-      'Explore Nano Banana 2 as an available image model inside Instant Ramen for multi-model AI image generation workflows.',
+      'Use Nano Banana 2 online for fast prompt-driven AI image generation, multiple aspect ratios, result previews, and downloads.',
     keywords:
-      'Nano Banana 2, Nano Banana 2 AI, AI image model, AI image generator',
-    supportsImageInput: true,
+      'Nano Banana AI, Nano Banana image generator, Nano Banana online, Nano Banana 2, AI image generator',
+    supportsImageInput: false,
     supportsMaskInput: false,
     supportsNegativePrompt: false,
   }),
@@ -374,8 +510,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     description:
       'FLUX is positioned as an available model family for high-quality prompt-first image generation.',
     heroTitle: 'FLUX for high-quality AI image generation',
-    heroDescription:
-      `Explore FLUX as one available model option in ${productName}'s multi-model AI image generation platform.`,
+    heroDescription: `Explore FLUX as one available model option in ${productName}'s multi-model AI image generation platform.`,
     features: [
       'Prompt-first image generation',
       'Strong visual style exploration',
@@ -412,8 +547,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       },
       {
         question: 'Is this an official FLUX page?',
-        answer:
-          `No. ${productName} is a multi-model AI image generation platform, not an official model website.`,
+        answer: `No. ${productName} is a multi-model AI image generation platform, not an official model website.`,
       },
     ],
     supportedModes: ['text-to-image', 'image-to-image'],
@@ -438,8 +572,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     description:
       'Imagen is positioned as an available model option for high-quality image generation search intent.',
     heroTitle: 'Imagen for text-to-image generation',
-    heroDescription:
-      `Explore Imagen as one provider-backed option inside ${productName}'s multi-model platform.`,
+    heroDescription: `Explore Imagen as one provider-backed option inside ${productName}'s multi-model platform.`,
     features: [
       'Text to Image positioning',
       'Provider-ready model metadata',
@@ -455,7 +588,11 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       'Editing behavior depends on provider capability',
       'Not an official Google website',
     ],
-    bestFor: ['Text-to-image searchers', 'Quality comparisons', 'Creative assets'],
+    bestFor: [
+      'Text-to-image searchers',
+      'Quality comparisons',
+      'Creative assets',
+    ],
     useCases: [
       {
         title: 'Search-driven generation',
@@ -471,8 +608,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     faq: [
       {
         question: 'Is Instant Ramen an official Imagen website?',
-        answer:
-          `No. ${productName} is an independent multi-model AI image generation platform.`,
+        answer: `No. ${productName} is an independent multi-model AI image generation platform.`,
       },
       {
         question: 'Can Imagen be compared with other models?',
@@ -502,8 +638,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     description:
       'Recraft is positioned as an available model for design-friendly image generation and brand asset workflows.',
     heroTitle: 'Recraft for design-focused AI image generation',
-    heroDescription:
-      `Explore Recraft inside ${productName} as a model option for brand and product creative work.`,
+    heroDescription: `Explore Recraft inside ${productName} as a model option for brand and product creative work.`,
     features: [
       'Design-oriented model positioning',
       'Useful for product and brand assets',
@@ -535,8 +670,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     faq: [
       {
         question: 'Is Recraft the only model here?',
-        answer:
-          `No. Recraft is one available model in ${productName}'s multi-model AI image generation platform.`,
+        answer: `No. Recraft is one available model in ${productName}'s multi-model AI image generation platform.`,
       },
       {
         question: 'Does Recraft support editing here today?',
@@ -566,8 +700,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     description:
       'Ideogram is positioned as an available model for creative generation and text-aware image workflows.',
     heroTitle: 'Ideogram for creative AI image generation',
-    heroDescription:
-      `Explore Ideogram as one available model in ${productName}'s provider-ready image platform.`,
+    heroDescription: `Explore Ideogram as one available model in ${productName}'s provider-ready image platform.`,
     features: [
       'Creative image generation positioning',
       'Useful for typography-oriented creative prompts',
@@ -599,8 +732,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     faq: [
       {
         question: 'Is this an official Ideogram website?',
-        answer:
-          `No. ${productName} is a multi-model AI image generation platform that can list Ideogram as one model option.`,
+        answer: `No. ${productName} is a multi-model AI image generation platform that can list Ideogram as one model option.`,
       },
       {
         question: 'Can Ideogram be compared with GPT Image 2 or Nano Banana 2?',
@@ -620,25 +752,45 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
   }),
 ];
 
-export const availableInstantRamenModels = instantRamenModels.filter(
+function sortInstantRamenModels(models: InstantRamenModelConfig[]) {
+  return [...models].sort((left, right) => left.sortOrder - right.sortOrder);
+}
+
+export const visibleInstantRamenModels = sortInstantRamenModels(
+  instantRamenModels.filter((model) => model.visible && model.indexable)
+);
+
+export const availableInstantRamenModels = visibleInstantRamenModels.filter(
   (model) => model.status === 'available'
 );
 
-export const comingSoonInstantRamenModels = instantRamenModels.filter(
+export const comingSoonInstantRamenModels = visibleInstantRamenModels.filter(
   (model) => model.status === 'coming-soon'
 );
 
-export const generationEnabledInstantRamenModels = instantRamenModels.filter(
-  (model) =>
-    model.enabled &&
-    model.visible &&
-    model.availability === 'available' &&
-    model.allowGeneration
+export const generationEnabledInstantRamenModels = sortInstantRamenModels(
+  instantRamenModels.filter(
+    (model) =>
+      model.enabled &&
+      model.visible &&
+      model.availability === 'available' &&
+      model.allowGeneration
+  )
 );
 
 export function getInstantRamenGeneratorEntryModels() {
-  return instantRamenModels.filter(
-    (model) => model.enabled && model.visible && model.showInGenerator
+  return sortInstantRamenModels(
+    instantRamenModels.filter(
+      (model) => model.enabled && model.visible && model.showInGenerator
+    )
+  );
+}
+
+export function getDefaultInstantRamenGenerationModel() {
+  return (
+    generationEnabledInstantRamenModels.find(
+      (model) => model.defaultSelected
+    ) ?? generationEnabledInstantRamenModels[0]
   );
 }
 

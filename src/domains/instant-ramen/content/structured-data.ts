@@ -45,11 +45,6 @@ export function buildInstantRamenWebApplicationSchema() {
     operatingSystem: 'Web',
     url: instantRamenBrandConfig.appUrl,
     description: instantRamenBrandConfig.description,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
   } as const;
 }
 

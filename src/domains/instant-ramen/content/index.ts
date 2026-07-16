@@ -1,3 +1,4 @@
+export * from './artwork';
 export * from './comparisons';
 export * from './models';
 export * from './pages';

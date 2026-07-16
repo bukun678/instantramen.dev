@@ -1,5 +1,6 @@
 import {
   generationEnabledInstantRamenModels,
+  getDefaultInstantRamenGenerationModel,
   getInstantRamenGeneratorEntryModels,
 } from '../content/models';
 
@@ -20,7 +21,16 @@ export const instantRamenTextToImageMvpModels: InstantRamenTextToImageMvpModel[]
     description: model.shortDescription,
   }));
 
-export const instantRamenGeneratorEntryModels = getInstantRamenGeneratorEntryModels();
+export const instantRamenGeneratorEntryModels =
+  getInstantRamenGeneratorEntryModels();
+
+export function resolveInstantRamenGeneratorModel(slug?: string | null) {
+  const requestedModel = slug
+    ? generationEnabledInstantRamenModels.find((model) => model.slug === slug)
+    : undefined;
+
+  return (requestedModel ?? getDefaultInstantRamenGenerationModel()).slug;
+}
 
 export function getInstantRamenTextToImageMvpModel(slug: string) {
   return instantRamenTextToImageMvpModels.find((model) => model.slug === slug);

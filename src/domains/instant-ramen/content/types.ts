@@ -61,13 +61,9 @@ export type InstantRamenPageContentConfig = {
   }>;
 };
 
-export type InstantRamenModelStatus =
-  | 'available'
-  | 'coming-soon';
+export type InstantRamenModelStatus = 'available' | 'coming-soon';
 
-export type InstantRamenModelAvailability =
-  | 'available'
-  | 'coming-soon';
+export type InstantRamenModelAvailability = 'available' | 'coming-soon';
 
 export type InstantRamenProviderStatus =
   | 'configured'
@@ -80,18 +76,18 @@ export type InstantRamenSupportedMode =
   | 'image-to-image'
   | 'image-editing';
 
-export type InstantRamenAspectRatio =
-  | '1:1'
-  | '3:4'
-  | '4:3'
-  | '9:16'
-  | '16:9';
+export type InstantRamenAspectRatio = '1:1' | '3:4' | '4:3' | '9:16' | '16:9';
 
 export type InstantRamenModelConfig = {
   slug: string;
   name: string;
   provider: string;
   displayName: string;
+  sortOrder: number;
+  featured: boolean;
+  recommended: boolean;
+  defaultSelected: boolean;
+  indexable: boolean;
   providerModelId: string;
   providerStatus: InstantRamenProviderStatus;
   status: InstantRamenModelStatus;
@@ -108,6 +104,11 @@ export type InstantRamenModelConfig = {
   strengths: string[];
   limitations: string[];
   bestFor: string[];
+  howTo: Array<{
+    title: string;
+    description: string;
+  }>;
+  difference: string;
   useCases: Array<{
     title: string;
     description: string;

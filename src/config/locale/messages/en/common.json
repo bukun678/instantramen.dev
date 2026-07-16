@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "title": "ShipAny Template Two",
-    "description": "ShipAny is a NextJS boilerplate for building AI SaaS startups. Ship Fast with a variety of templates and components.",
-    "keywords": "shipany, shipany-boilerplate, shipany-template-two-demo"
+    "title": "Instant Ramen AI Image Generator",
+    "description": "Create images from text prompts with Instant Ramen, GPT Image 2, and Nano Banana 2.",
+    "keywords": "Instant Ramen, AI image generator, GPT Image 2, Nano Banana 2"
   },
   "sign": {
     "sign_in_title": "Sign In",

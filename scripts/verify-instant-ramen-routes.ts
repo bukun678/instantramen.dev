@@ -1,9 +1,9 @@
 import {
   getLocalizedInstantRamenPath,
-  instantRamenModels,
   instantRamenRouteList,
   instantRamenRoutes,
   instantRamenSitemapRoutes,
+  visibleInstantRamenModels,
 } from '../src/domains/instant-ramen';
 
 const expectedPaths = [
@@ -15,7 +15,7 @@ const expectedPaths = [
   '/create',
   '/create/edit',
   '/create/history',
-  ...instantRamenModels.map((model) => `/models/${model.slug}`),
+  ...visibleInstantRamenModels.map((model) => `/models/${model.slug}`),
 ];
 
 function assert(condition: boolean, message: string) {
@@ -38,20 +38,14 @@ assert(
 );
 
 assert(
-  getLocalizedInstantRamenPath(
-    instantRamenRoutes.pricing.path,
-    'en',
-    'en'
-  ) === '/pricing',
+  getLocalizedInstantRamenPath(instantRamenRoutes.pricing.path, 'en', 'en') ===
+    '/pricing',
   'English pricing path should not include /en'
 );
 
 assert(
-  getLocalizedInstantRamenPath(
-    instantRamenRoutes.pricing.path,
-    'zh',
-    'en'
-  ) === '/zh/pricing',
+  getLocalizedInstantRamenPath(instantRamenRoutes.pricing.path, 'zh', 'en') ===
+    '/zh/pricing',
   'Non-default locale path should include locale prefix'
 );
 

@@ -1,123 +1,115 @@
+import type { Metadata } from 'next';
+import { instantRamenBrandConfig } from '@/domains/instant-ramen';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { envConfigs } from '@/config';
 import { defaultLocale } from '@/config/locale';
-import { instantRamenBrandConfig } from '@/domains/instant-ramen';
 
-// get metadata for page component
-export function getMetadata(
-  options: {
+export type InstantRamenMetadataOptions = {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  metadataKey?: string;
+  canonicalUrl?: string;
+  imageUrl?: string;
+  openGraph?: {
     title?: string;
     description?: string;
-    keywords?: string;
-    metadataKey?: string;
-    canonicalUrl?: string; // relative path or full url
-    imageUrl?: string;
-    openGraph?: {
-      title?: string;
-      description?: string;
-      imagePath?: string;
-      imageAlt?: string;
-    };
-    appName?: string;
-    noIndex?: boolean;
-  } = {}
-) {
+    imagePath?: string;
+    imageAlt?: string;
+  };
+  appName?: string;
+  noIndex?: boolean;
+};
+
+export async function buildInstantRamenMetadata(
+  options: InstantRamenMetadataOptions = {},
+  locale = defaultLocale
+): Promise<Metadata> {
+  setRequestLocale(locale);
+
+  const passedMetadata = {
+    title: options.title,
+    description: options.description,
+    keywords: options.keywords,
+  };
+  const defaultMetadata = getBrandDefaultMetadata();
+
+  let translatedMetadata: any = {};
+  if (options.metadataKey) {
+    translatedMetadata = await getTranslatedMetadata(
+      options.metadataKey,
+      locale
+    );
+  }
+
+  const canonicalUrl = await getCanonicalUrl(
+    options.canonicalUrl || '',
+    locale || ''
+  );
+  const rawTitle =
+    passedMetadata.title || translatedMetadata.title || defaultMetadata.title;
+  const description =
+    passedMetadata.description ||
+    translatedMetadata.description ||
+    defaultMetadata.description;
+  const title = formatSeoTitle(rawTitle);
+
+  let imageUrl =
+    options.imageUrl || options.openGraph?.imagePath || envConfigs.og_image;
+  if (!imageUrl.startsWith('http')) {
+    imageUrl = `${envConfigs.app_url}${imageUrl}`;
+  }
+
+  const appName = options.appName || envConfigs.app_name || '';
+
+  return {
+    title,
+    description,
+    keywords:
+      passedMetadata.keywords ||
+      translatedMetadata.keywords ||
+      defaultMetadata.keywords,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      type: 'website',
+      locale: instantRamenBrandConfig.openGraph.locale || locale,
+      url: canonicalUrl,
+      title: options.openGraph?.title || title,
+      description: options.openGraph?.description || description,
+      siteName: appName,
+      images: [
+        {
+          url: imageUrl.toString(),
+          alt: options.openGraph?.imageAlt || envConfigs.og_image_alt,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [imageUrl.toString()],
+      site: envConfigs.app_url,
+    },
+    robots: {
+      index: !options.noIndex,
+      follow: !options.noIndex,
+    },
+  };
+}
+
+// get metadata for page component
+export function getMetadata(options: InstantRamenMetadataOptions = {}) {
   return async function generateMetadata({
     params,
   }: {
     params: Promise<{ locale: string }>;
   }) {
     const { locale } = await params;
-    setRequestLocale(locale);
-
-    // passed metadata
-    const passedMetadata = {
-      title: options.title,
-      description: options.description,
-      keywords: options.keywords,
-    };
-
-    // brand defaults
-    const defaultMetadata = getBrandDefaultMetadata();
-
-    // translated metadata
-    let translatedMetadata: any = {};
-    if (options.metadataKey) {
-      translatedMetadata = await getTranslatedMetadata(
-        options.metadataKey,
-        locale
-      );
-    }
-
-    // canonical url
-    const canonicalUrl = await getCanonicalUrl(
-      options.canonicalUrl || '',
-      locale || ''
-    );
-
-    const rawTitle =
-      passedMetadata.title || translatedMetadata.title || defaultMetadata.title;
-    const description =
-      passedMetadata.description ||
-      translatedMetadata.description ||
-      defaultMetadata.description;
-    const title = formatSeoTitle(rawTitle);
-
-    // image url
-    let imageUrl =
-      options.imageUrl || options.openGraph?.imagePath || envConfigs.og_image;
-    if (imageUrl.startsWith('http')) {
-      imageUrl = imageUrl;
-    } else {
-      imageUrl = `${envConfigs.app_url}${imageUrl}`;
-    }
-
-    // app name
-    let appName = options.appName;
-    if (!appName) {
-      appName = envConfigs.app_name || '';
-    }
-
-    return {
-      title,
-      description,
-      keywords:
-        passedMetadata.keywords ||
-        translatedMetadata.keywords ||
-        defaultMetadata.keywords,
-      alternates: {
-        canonical: canonicalUrl,
-      },
-
-      openGraph: {
-        type: 'website',
-        locale: instantRamenBrandConfig.openGraph.locale || locale,
-        url: canonicalUrl,
-        title: options.openGraph?.title || title,
-        description: options.openGraph?.description || description,
-        siteName: appName,
-        images: [
-          {
-            url: imageUrl.toString(),
-            alt: options.openGraph?.imageAlt || envConfigs.og_image_alt,
-          },
-        ],
-      },
-
-      twitter: {
-        card: 'summary_large_image',
-        title,
-        description,
-        images: [imageUrl.toString()],
-        site: envConfigs.app_url,
-      },
-
-      robots: {
-        index: options.noIndex ? false : true,
-        follow: options.noIndex ? false : true,
-      },
-    };
+    return buildInstantRamenMetadata(options, locale);
   };
 }
 
