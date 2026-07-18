@@ -5,9 +5,11 @@ export const instantRamenBrandConfig = {
   tagline: 'AI image generation for creators',
   description:
     'Instant Ramen is a multi-model AI image generator for turning text prompts into downloadable visual concepts.',
-  logoPath: '/logo.png',
+  logoPath: '/instant-ramen-logo.svg',
+  rasterLogoPath: '/logo.png',
   faviconPath: '/favicon.ico',
-  previewImagePath: '/images/og/instant-ramen-og.webp',
+  socialAvatarPath: '/images/brand/instant-ramen-social-avatar.png',
+  previewImagePath: '/images/og/instant-ramen-og.png',
   seo: {
     defaultTitle: 'Instant Ramen AI Image Generator',
     defaultTitleTemplate: '%s | Instant Ramen',
@@ -23,8 +25,9 @@ export const instantRamenBrandConfig = {
     description:
       'Create images from text prompts with Instant Ramen, a focused multi-model AI image generator for creators.',
     url: 'https://instantramen.dev',
-    imagePath: '/images/og/instant-ramen-og.webp',
-    imageAlt: 'Instant Ramen AI image generator creative example',
+    imagePath: '/images/og/instant-ramen-og.png',
+    imageAlt:
+      'Instant Ramen logo over an abstract orange and warm-white creative scene',
     locale: 'en_US',
   },
 } as const;

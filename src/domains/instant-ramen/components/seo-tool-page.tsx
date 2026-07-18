@@ -7,7 +7,7 @@ function ArrowLink({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
-      className="border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md border px-5 py-2.5 text-sm font-black transition focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md border px-5 py-2.5 text-sm font-extrabold transition focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {label}
       <span aria-hidden="true" className="ml-2">
@@ -40,7 +40,7 @@ export function InstantRamenSeoToolPage({
                   {content.eyebrow}
                 </p>
               ) : null}
-              <h1 className="mt-5 text-5xl font-black tracking-[-0.06em] text-balance sm:text-6xl lg:text-7xl">
+              <h1 className="mt-5 text-5xl font-extrabold tracking-[-0.045em] text-balance sm:text-6xl lg:text-7xl">
                 {content.headline}
               </h1>
               <p className="text-muted-foreground mt-6 max-w-2xl text-base leading-7 sm:text-lg">
@@ -72,7 +72,7 @@ export function InstantRamenSeoToolPage({
                       {section.label}
                     </p>
                   ) : null}
-                  <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+                  <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
                     {section.title}
                   </h2>
                 </div>
@@ -90,7 +90,7 @@ export function InstantRamenSeoToolPage({
                           <span className="text-primary font-mono text-xs">
                             0{index + 1}
                           </span>
-                          <h3 className="font-black">{item.title}</h3>
+                          <h3 className="font-extrabold">{item.title}</h3>
                           <p className="text-muted-foreground text-sm leading-6">
                             {item.description}
                           </p>

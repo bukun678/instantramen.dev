@@ -66,11 +66,6 @@ export function applyInstantRamenBrandToLandingLayout({
                 target: '_self',
               },
               {
-                title: 'AI Image Editor',
-                url: '/ai-image-editor',
-                target: '_self',
-              },
-              {
                 title: 'Pricing',
                 url: '/pricing',
                 target: '_self',

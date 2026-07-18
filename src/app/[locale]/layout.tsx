@@ -2,15 +2,15 @@ import '@/config/style/global.css';
 
 import { JetBrains_Mono, Merriweather, Noto_Sans_Mono } from 'next/font/google';
 import { notFound } from 'next/navigation';
+import { instantRamenBrandConfig } from '@/domains/instant-ramen/config/brand';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import NextTopLoader from 'nextjs-toploader';
 
-import { envConfigs } from '@/config';
-import { locales } from '@/config/locale';
 import { routing } from '@/core/i18n/config';
 import { ThemeProvider } from '@/core/theme/provider';
-import { instantRamenBrandConfig } from '@/domains/instant-ramen/config/brand';
+import { envConfigs } from '@/config';
+import { locales } from '@/config/locale';
 import { UtmCapture } from '@/shared/blocks/common/utm-capture';
 import { Toaster } from '@/shared/components/ui/sonner';
 import { AppContextProvider } from '@/shared/contexts/app';
@@ -115,8 +115,6 @@ export default async function LocaleLayout({
       suppressHydrationWarning
     >
       <head>
-        <link rel="icon" href={envConfigs.app_favicon} />
-        <link rel="alternate icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         {locales

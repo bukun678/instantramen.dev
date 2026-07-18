@@ -21,8 +21,17 @@ type GenerateResult = {
   mock: boolean;
 };
 
+function keepModelNameWithinTwoLines(displayName: string) {
+  return displayName.replace(/ (?=[^ ]+$)/, '\u00a0');
+}
+
 const INSTANT_RAMEN_GENERATION_POLL_INTERVAL_MS = 2000;
 const INSTANT_RAMEN_GENERATION_POLL_MAX_ATTEMPTS = 90;
+const INSTANT_RAMEN_EXAMPLE_PROMPTS = [
+  'A cinematic fashion portrait at a neon night market, rain reflections, cobalt and coral light, editorial photography',
+  'A bright commercial product photograph of cobalt headphones suspended in a crystal water splash',
+  'A joyful children’s-book illustration of a tiny garden growing on the moon, painted gouache texture',
+] as const;
 
 function GeneratorFallback() {
   return (
@@ -57,6 +66,7 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [examplePromptIndex, setExamplePromptIndex] = useState(0);
   const { openAuthModal, session } = useInstantRamenAuth();
 
   useEffect(() => {
@@ -209,6 +219,15 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
     }
   }
 
+  function applyExamplePrompt() {
+    setPrompt(INSTANT_RAMEN_EXAMPLE_PROMPTS[examplePromptIndex]);
+    setExamplePromptIndex(
+      (currentIndex) =>
+        (currentIndex + 1) % INSTANT_RAMEN_EXAMPLE_PROMPTS.length
+    );
+    setError('');
+  }
+
   const resultStatus = error
     ? 'Generation stopped'
     : isLoading
@@ -222,27 +241,27 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
   return (
     <section
       aria-label="AI image generator"
-      className={`bg-card overflow-hidden rounded-xl border ${
+      className={`instant-ramen-generator-shell bg-card overflow-hidden rounded-2xl border ${
         compact ? 'w-full' : ''
       }`}
     >
       <div className="grid min-w-0 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)]">
         <div className="min-w-0 border-b p-5 sm:p-7 lg:border-r lg:border-b-0 lg:p-8">
-          <div className="mb-7 flex items-start justify-between gap-4 border-b pb-5">
+          <div className="mb-6 flex items-start justify-between gap-4 border-b pb-5">
             <div>
               <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
                 Text to image
               </p>
-              <h3 className="mt-2 text-2xl font-black tracking-[-0.03em] sm:text-3xl">
-                Build the prompt.
+              <h3 className="mt-2 text-2xl font-extrabold tracking-[-0.025em] sm:text-3xl">
+                Describe your image.
               </h3>
             </div>
             <span className="text-muted-foreground rounded border px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase">
-              MVP
+              Live tool
             </span>
           </div>
 
-          <div className="space-y-7">
+          <div className="space-y-6">
             <label className="block" htmlFor="instant-ramen-prompt">
               <span className="text-sm font-bold">Prompt</span>
               <span className="text-muted-foreground ml-2 font-mono text-[10px] tracking-[0.12em] uppercase">
@@ -252,9 +271,22 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
                 id="instant-ramen-prompt"
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                placeholder="A cinematic photograph of a circular observatory in the desert at blue hour, warm orange moon, fine architectural detail…"
-                className="bg-background placeholder:text-muted-foreground/65 focus:border-primary focus:ring-ring/20 mt-2 min-h-44 w-full resize-y rounded-lg border p-4 text-base leading-7 transition outline-none focus:ring-2"
+                placeholder="A cinematic fashion portrait at a neon night market, rain reflections, cobalt and coral light…"
+                className="bg-background placeholder:text-muted-foreground/60 focus:border-primary focus:ring-ring/20 mt-2 min-h-40 w-full resize-y rounded-xl border p-4 text-base leading-7 transition outline-none focus:ring-2"
               />
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={applyExamplePrompt}
+                  className="text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-11 items-center gap-2 text-left text-xs font-semibold transition focus-visible:ring-2 focus-visible:outline-none"
+                >
+                  Try an example prompt
+                  <span aria-hidden="true">↗</span>
+                </button>
+                <span className="text-muted-foreground font-mono text-[10px]">
+                  {prompt.length}/2000
+                </span>
+              </div>
             </label>
 
             <fieldset>
@@ -269,6 +301,7 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
                       key={option.slug}
                       type="button"
                       data-model-slug={option.slug}
+                      data-mobile-model-card
                       aria-pressed={isSelected}
                       onClick={() => {
                         if (canGenerate) {
@@ -276,7 +309,7 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
                         }
                       }}
                       disabled={!canGenerate}
-                      className={`focus-visible:ring-ring min-h-24 rounded-lg border p-3 text-left transition focus-visible:ring-2 focus-visible:outline-none ${
+                      className={`focus-visible:ring-ring min-h-[72px] rounded-xl border px-3 py-1.5 text-left transition focus-visible:ring-2 focus-visible:outline-none sm:min-h-24 sm:p-3 ${
                         isSelected
                           ? 'border-primary bg-primary/10'
                           : canGenerate
@@ -284,18 +317,26 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
                             : 'bg-muted/30 text-muted-foreground cursor-not-allowed'
                       }`}
                     >
-                      <span className="flex items-start justify-between gap-2 font-mono text-xs font-bold">
-                        {option.displayName}
-                        {!canGenerate ? (
-                          <span className="rounded border px-1.5 py-0.5 text-[8px] tracking-[0.1em] uppercase">
-                            Soon
+                      <span className="flex h-full items-center justify-between gap-2 sm:items-start">
+                        <span className="min-w-0">
+                          <span className="line-clamp-2 block text-[13px] leading-4 font-bold text-balance sm:text-sm sm:leading-5">
+                            {keepModelNameWithinTwoLines(option.displayName)}
                           </span>
-                        ) : null}
-                      </span>
-                      <span className="text-muted-foreground mt-2 block text-[11px] leading-4">
-                        {canGenerate
-                          ? `${option.creditCost} credits · ${option.provider === 'apimart' ? 'Available' : 'Provider'}`
-                          : 'Not available for generation'}
+                          {canGenerate ? (
+                            <span className="text-muted-foreground mt-0.5 block truncate font-mono text-[9px] leading-4 sm:mt-3 sm:text-[10px]">
+                              {option.creditCost} credits
+                            </span>
+                          ) : null}
+                        </span>
+                        <span
+                          className={`shrink-0 rounded border px-1 py-0.5 font-mono text-[8px] tracking-[0.06em] uppercase sm:px-1.5 sm:py-1 sm:tracking-[0.08em] ${
+                            canGenerate
+                              ? 'border-emerald-700/20 text-emerald-800 dark:border-emerald-300/25 dark:text-emerald-300'
+                              : 'border-orange-700/20 text-orange-800 dark:border-orange-300/25 dark:text-orange-300'
+                          }`}
+                        >
+                          {canGenerate ? 'Available' : 'Coming soon'}
+                        </span>
                       </span>
                     </button>
                   );
@@ -305,14 +346,14 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
 
             <fieldset>
               <legend className="text-sm font-bold">Aspect ratio</legend>
-              <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-5">
+              <div className="mt-2 flex flex-wrap gap-2">
                 {instantRamenTextToImageSizes.map((option) => (
                   <button
                     key={option.value}
                     type="button"
                     aria-pressed={size === option.value}
                     onClick={() => setSize(option.value)}
-                    className={`focus-visible:ring-ring min-h-11 rounded-md border px-2 py-2 font-mono text-xs transition focus-visible:ring-2 focus-visible:outline-none ${
+                    className={`focus-visible:ring-ring min-h-11 min-w-14 rounded-md border px-3 py-2 font-mono text-xs transition focus-visible:ring-2 focus-visible:outline-none ${
                       size === option.value
                         ? 'border-primary bg-primary text-primary-foreground'
                         : 'bg-background hover:bg-muted'
@@ -328,7 +369,7 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
               type="button"
               onClick={handleGenerate}
               disabled={isLoading}
-              className="border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex min-h-13 w-full items-center justify-center gap-3 rounded-md border px-5 py-3 text-sm font-black transition focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
+              className="border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex min-h-13 w-full items-center justify-center gap-3 rounded-lg border px-5 py-3 text-sm font-extrabold transition focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-wait disabled:opacity-70"
             >
               {isLoading ? (
                 <>
@@ -354,7 +395,7 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
           </div>
         </div>
 
-        <div className="min-w-0 bg-neutral-950 p-4 text-neutral-50 sm:p-6 lg:p-8">
+        <div className="instant-ramen-generator-result min-w-0 bg-[#1c1d1b] p-4 text-neutral-50 sm:p-6 lg:p-8">
           <div className="mb-4 flex min-h-11 items-center justify-between gap-4 border-b border-white/10 pb-4">
             <div>
               <p className="font-mono text-[10px] tracking-[0.14em] text-white/50 uppercase">
@@ -376,7 +417,7 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
             ) : null}
           </div>
 
-          <div className="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-lg border border-white/10 bg-neutral-900 sm:min-h-[520px] lg:min-h-[620px]">
+          <div className="instant-ramen-result-grid relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-[#242522] sm:min-h-[520px] lg:min-h-[620px]">
             {result?.imageUrl ? (
               // Generated result URLs are dynamic provider assets and cannot be
               // safely predeclared in Next.js remote image patterns.
@@ -404,13 +445,16 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
                 </p>
               </div>
             ) : (
-              <div className="max-w-sm px-8 text-center">
-                <span
-                  className="font-mono text-5xl text-orange-400"
+              <div
+                data-generator-empty-state
+                className="max-w-sm rounded-2xl border border-white/10 bg-black/20 px-8 py-9 text-center backdrop-blur-sm"
+              >
+                <div
                   aria-hidden="true"
+                  className="mx-auto grid h-12 w-12 place-items-center rounded-xl border border-orange-300/35 bg-orange-400/10 text-2xl text-orange-300"
                 >
-                  +
-                </span>
+                  ↗
+                </div>
                 <p className="mt-5 text-lg font-bold">
                   Your image will appear here.
                 </p>
@@ -418,6 +462,13 @@ function InstantRamenTextToImageClient({ compact }: { compact: boolean }) {
                   Write a clear prompt, choose an available model, and start the
                   generation task.
                 </p>
+                <button
+                  type="button"
+                  onClick={applyExamplePrompt}
+                  className="mt-5 inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 px-4 py-2 text-xs font-semibold text-white transition hover:border-orange-300/50 hover:bg-orange-400/10 focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:outline-none"
+                >
+                  Try an example prompt
+                </button>
               </div>
             )}
           </div>

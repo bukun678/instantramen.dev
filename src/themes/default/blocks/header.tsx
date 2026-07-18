@@ -94,7 +94,7 @@ export function Header({ header }: { header: HeaderType }) {
                   <Link
                     href={item.url || ''}
                     target={item.target || '_self'}
-                    className={`flex flex-row items-center gap-2 px-4 py-1.5 text-sm ${
+                    className={`focus-visible:ring-ring focus-visible:bg-muted focus-visible:text-foreground flex flex-row items-center gap-2 px-4 py-1.5 text-sm outline-none focus:bg-transparent focus:text-inherit focus-visible:ring-2 ${
                       item.is_active || pathname.endsWith(item.url as string)
                         ? 'bg-muted/40 text-muted-foreground'
                         : ''
@@ -109,7 +109,7 @@ export function Header({ header }: { header: HeaderType }) {
 
             return (
               <NavigationMenuItem key={idx}>
-                <NavigationMenuTrigger className="flex flex-row items-center gap-2 text-sm">
+                <NavigationMenuTrigger className="focus-visible:ring-ring focus-visible:bg-foreground/5 focus-visible:text-foreground flex flex-row items-center gap-2 text-sm focus:bg-transparent focus:text-inherit focus-visible:ring-2 focus-visible:outline-none">
                   {item.icon && (
                     <SmartIcon name={item.icon as string} className="h-4 w-4" />
                   )}
@@ -173,7 +173,7 @@ export function Header({ header }: { header: HeaderType }) {
                             <Link
                               href={subItem.url || ''}
                               onClick={closeMenu}
-                              className="grid grid-cols-[auto_1fr] items-center gap-2.5 px-4 py-2"
+                              className="focus-visible:ring-ring grid grid-cols-[auto_1fr] items-center gap-2.5 px-4 py-2 outline-none focus-visible:ring-2"
                             >
                               <div
                                 aria-hidden
@@ -194,7 +194,7 @@ export function Header({ header }: { header: HeaderType }) {
                   <Link
                     href={item.url || ''}
                     onClick={closeMenu}
-                    className="data-[state=open]:bg-muted flex items-center justify-between px-4 py-3 text-lg **:!font-normal"
+                    className="data-[state=open]:bg-muted focus-visible:ring-ring flex items-center justify-between px-4 py-3 text-lg outline-none **:!font-normal focus-visible:ring-2"
                   >
                     {item.title}
                   </Link>
@@ -227,7 +227,7 @@ export function Header({ header }: { header: HeaderType }) {
           <Link
             href={href}
             target={target || '_self'}
-            className="grid grid-cols-[auto_1fr] gap-3.5"
+            className="focus-visible:ring-ring focus-visible:bg-muted focus-visible:text-foreground grid grid-cols-[auto_1fr] gap-3.5 outline-none focus:bg-transparent focus:text-inherit focus-visible:ring-2"
           >
             <div className="bg-background ring-foreground/10 relative flex size-9 items-center justify-center rounded border border-transparent shadow-sm ring-1">
               {children}
@@ -250,7 +250,7 @@ export function Header({ header }: { header: HeaderType }) {
         data-state={isMobileMenuOpen ? 'active' : 'inactive'}
         {...(isScrolled && { 'data-scrolled': true })}
         className={cn(
-          'has-data-[state=open]:bg-background/50 fixed inset-x-0 top-0 z-50 has-data-[state=open]:h-screen has-data-[state=open]:backdrop-blur',
+          'has-data-[state=open]:bg-background/50 fixed inset-x-0 top-0 z-50 h-14 has-data-[state=open]:h-screen has-data-[state=open]:backdrop-blur max-lg:data-[state=active]:h-screen lg:h-18',
           header.className
         )}
       >
@@ -266,7 +266,32 @@ export function Header({ header }: { header: HeaderType }) {
             <div className="relative flex flex-wrap items-center justify-between lg:py-5">
               <div className="flex justify-between gap-8 max-lg:h-14 max-lg:w-full max-lg:border-b">
                 {/* Brand Logo */}
-                {header.brand && <BrandLogo brand={header.brand} />}
+                {header.brand &&
+                  (header.className
+                    ?.split(/\s+/)
+                    .includes('instant-ramen-header') ? (
+                    <Link
+                      href={header.brand.url || ''}
+                      target={header.brand.target || '_self'}
+                      className={`flex items-center space-x-3 ${header.brand.className || ''}`}
+                    >
+                      <svg
+                        viewBox="9 9 50 50"
+                        className="text-foreground size-6 shrink-0"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <use href="/instant-ramen-logo.svg#instant-ramen-mark" />
+                      </svg>
+                      {header.brand.title && (
+                        <span className="text-lg font-medium">
+                          {header.brand.title}
+                        </span>
+                      )}
+                    </Link>
+                  ) : (
+                    <BrandLogo brand={header.brand} />
+                  ))}
 
                 {/* Desktop Navigation Menu */}
                 {isLarge && <NavMenu />}
@@ -276,7 +301,7 @@ export function Header({ header }: { header: HeaderType }) {
                   aria-label={
                     isMobileMenuOpen == true ? 'Close Menu' : 'Open Menu'
                   }
-                  className="relative z-20 -m-2.5 -mr-3 block cursor-pointer p-2.5 lg:hidden"
+                  className="focus-visible:ring-ring relative z-20 -m-2.5 -mr-3 block cursor-pointer rounded-md p-2.5 outline-none focus-visible:ring-2 lg:hidden"
                 >
                   <Menu className="m-auto size-5 duration-200 in-data-[state=active]:scale-0 in-data-[state=active]:rotate-180 in-data-[state=active]:opacity-0" />
                   <X className="absolute inset-0 m-auto size-5 scale-0 -rotate-180 opacity-0 duration-200 in-data-[state=active]:scale-100 in-data-[state=active]:rotate-0 in-data-[state=active]:opacity-100" />

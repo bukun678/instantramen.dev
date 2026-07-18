@@ -45,7 +45,7 @@ function PrimaryCta({
   return (
     <Link
       href={href}
-      className="border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-5 py-2.5 text-sm font-black transition focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-ring inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-5 py-2.5 text-sm font-extrabold transition focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {children}
       <span aria-hidden="true">→</span>
@@ -68,7 +68,7 @@ function SecondaryCta({
       className={`focus-visible:ring-ring inline-flex min-h-11 items-center justify-center rounded-md border px-5 py-2.5 text-sm font-bold transition focus-visible:ring-2 focus-visible:ring-offset-2 ${
         inverse
           ? 'border-white bg-white text-neutral-950 hover:bg-neutral-200'
-          : 'bg-background hover:bg-muted'
+          : 'bg-background hover:bg-muted dark:border-white/30 dark:text-neutral-100'
       }`}
     >
       {children}
@@ -124,18 +124,18 @@ function TextList({
   items: string[];
 }) {
   return (
-    <section className="border-t pt-10">
+    <section className="bg-card rounded-2xl border p-6 sm:p-8">
       <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
         {eyebrow}
       </p>
-      <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+      <h2 className="mt-3 text-2xl font-extrabold tracking-[-0.025em] sm:text-3xl">
         {title}
       </h2>
-      <ul className="mt-8 divide-y border-y">
+      <ul className="mt-7 space-y-3">
         {items.map((item, index) => (
           <li
             key={item}
-            className="grid gap-3 py-5 sm:grid-cols-[3rem_1fr] sm:items-start"
+            className="bg-muted/45 grid gap-3 rounded-xl border p-4 sm:grid-cols-[2.5rem_1fr] sm:items-start"
           >
             <span className="text-primary font-mono text-xs">0{index + 1}</span>
             <span className="text-muted-foreground text-sm leading-6 sm:text-base">
@@ -158,6 +158,9 @@ export function InstantRamenModelPageTemplate({
     (candidate) => candidate.slug !== model.slug
   );
   const isComingSoon = model.status === 'coming-soon';
+  const heroTitleSuffix = model.heroTitle.startsWith(model.displayName)
+    ? model.heroTitle.slice(model.displayName.length)
+    : null;
 
   return (
     <main className="instant-ramen-surface bg-background text-foreground overflow-x-clip">
@@ -195,7 +198,7 @@ export function InstantRamenModelPageTemplate({
             </span>
           </nav>
 
-          <div className="grid gap-12 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3">
                 <StatusLabel model={model} />
@@ -203,10 +206,19 @@ export function InstantRamenModelPageTemplate({
                   Text to image
                 </span>
               </div>
-              <h1 className="mt-7 text-5xl font-black tracking-[-0.06em] text-balance sm:text-6xl lg:text-7xl">
-                {model.heroTitle}
+              <h1 className="mt-7 text-[2.6rem] leading-[1.04] font-extrabold tracking-[-0.045em] text-balance sm:text-6xl lg:text-7xl">
+                {heroTitleSuffix !== null ? (
+                  <>
+                    <span className="whitespace-nowrap">
+                      {model.displayName}
+                    </span>
+                    {heroTitleSuffix}
+                  </>
+                ) : (
+                  model.heroTitle
+                )}
               </h1>
-              <p className="text-muted-foreground mt-6 max-w-2xl text-base leading-7 sm:text-lg">
+              <p className="text-muted-foreground mt-6 max-w-2xl text-base leading-7 sm:text-lg dark:text-neutral-300">
                 {model.heroDescription}
               </p>
               <div className="mt-8">
@@ -214,25 +226,25 @@ export function InstantRamenModelPageTemplate({
               </div>
             </div>
 
-            <figure className="relative min-h-[350px] overflow-hidden rounded-xl border border-white/10 bg-neutral-950 sm:min-h-[500px] lg:min-h-[620px]">
+            <figure className="relative min-h-[330px] overflow-hidden rounded-2xl border border-white/10 bg-neutral-950 sm:min-h-[460px] lg:min-h-[560px]">
               <Image
                 src={artwork[0].src}
                 alt={artwork[0].alt}
                 fill
                 priority
-                sizes="(max-width: 1023px) 100vw, 58vw"
+                sizes="(max-width: 1023px) 100vw, 55vw"
                 className="object-cover"
               />
               <figcaption className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-black/75 p-4 text-white sm:p-5">
                 <div>
-                  <p className="font-mono text-[10px] tracking-[0.14em] text-white/60 uppercase">
+                  <p className="font-mono text-[10px] tracking-[0.14em] text-white/80 uppercase">
                     {artwork[0].label}
                   </p>
                   <p className="mt-1 text-sm font-semibold">
                     {artwork[0].category}
                   </p>
                 </div>
-                <span className="font-mono text-xs text-white/55">16:9</span>
+                <span className="font-mono text-xs text-white/75">16:9</span>
               </figcaption>
             </figure>
           </div>
@@ -245,7 +257,7 @@ export function InstantRamenModelPageTemplate({
             <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
               Overview
             </p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
               What is {model.displayName}?
             </h2>
           </div>
@@ -273,7 +285,7 @@ export function InstantRamenModelPageTemplate({
             <p className="font-mono text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
               {isComingSoon ? 'Concept previews' : 'Creative examples'}
             </p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
               {isComingSoon
                 ? 'A visual direction, not a model result.'
                 : `Ideas for ${model.displayName}.`}
@@ -283,6 +295,46 @@ export function InstantRamenModelPageTemplate({
                 ? 'These images are labeled as concepts because the Instant Ramen model is not available.'
                 : 'These original examples show useful visual directions without claiming model benchmarks or guaranteed output.'}
             </p>
+          </div>
+          <div
+            data-model-workflow-example
+            className="mt-10 grid overflow-hidden rounded-2xl border border-white/10 bg-[#1b1c1a] md:grid-cols-[0.72fr_1.28fr]"
+          >
+            <div className="flex flex-col justify-between border-b border-white/10 p-6 md:border-r md:border-b-0 md:p-8">
+              <div>
+                <p className="font-mono text-[10px] font-semibold tracking-[0.14em] text-orange-400 uppercase">
+                  Prompt
+                </p>
+                <p className="mt-5 text-base leading-7 text-neutral-200 sm:text-lg">
+                  {artwork[0].prompt}
+                </p>
+              </div>
+              {model.allowGeneration ? (
+                <div className="mt-8">
+                  <PrimaryCta href={`/ai-image-generator?model=${model.slug}`}>
+                    Try this direction
+                  </PrimaryCta>
+                </div>
+              ) : (
+                <p className="mt-8 font-mono text-xs text-neutral-500">
+                  Concept prompt · model coming soon
+                </p>
+              )}
+            </div>
+            <figure className="relative min-h-[340px] bg-neutral-900 sm:min-h-[460px]">
+              <Image
+                src={artwork[0].src}
+                alt={artwork[0].alt}
+                fill
+                sizes="(max-width: 767px) 100vw, 64vw"
+                className="object-cover"
+              />
+              <figcaption className="absolute right-4 bottom-4 rounded border border-white/15 bg-black/65 px-3 py-2 text-white backdrop-blur-sm">
+                <span className="font-mono text-[10px] tracking-[0.12em] text-white/60 uppercase">
+                  Result
+                </span>
+              </figcaption>
+            </figure>
           </div>
           <div className="mt-10 grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
             {artwork.slice(1).map((item, index) => (
@@ -311,8 +363,8 @@ export function InstantRamenModelPageTemplate({
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-6 lg:py-24">
-        <div className="mx-auto grid max-w-7xl gap-16 lg:grid-cols-2">
+      <section className="px-4 py-14 sm:px-6 lg:py-22">
+        <div className="mx-auto grid max-w-7xl gap-5 lg:grid-cols-2">
           <TextList
             title="Where it fits best"
             eyebrow="Best for"
@@ -343,7 +395,7 @@ export function InstantRamenModelPageTemplate({
               <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
                 How to use it
               </p>
-              <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
                 From prompt to image in three steps.
               </h2>
             </div>
@@ -356,7 +408,7 @@ export function InstantRamenModelPageTemplate({
                   <span className="text-primary font-mono text-xs">
                     0{index + 1}
                   </span>
-                  <h3 className="font-black">{step.title}</h3>
+                  <h3 className="font-extrabold">{step.title}</h3>
                   <p className="text-muted-foreground text-sm leading-6">
                     {step.description}
                   </p>
@@ -374,7 +426,7 @@ export function InstantRamenModelPageTemplate({
               <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
                 Model differences
               </p>
-              <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
                 Choose by workflow, not hype.
               </h2>
             </div>
@@ -386,7 +438,7 @@ export function InstantRamenModelPageTemplate({
           <div className="bg-border mt-14 grid gap-px overflow-hidden rounded-lg border md:grid-cols-2">
             {model.useCases.map((useCase) => (
               <article key={useCase.title} className="bg-background p-6 sm:p-8">
-                <h3 className="text-xl font-black tracking-[-0.02em]">
+                <h3 className="text-xl font-extrabold tracking-[-0.02em]">
                   {useCase.title}
                 </h3>
                 <p className="text-muted-foreground mt-3 text-sm leading-6">
@@ -404,7 +456,7 @@ export function InstantRamenModelPageTemplate({
             <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
               FAQ
             </p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+            <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
               Questions about {model.displayName}.
             </h2>
           </div>
@@ -434,7 +486,7 @@ export function InstantRamenModelPageTemplate({
           <p className="text-primary font-mono text-xs font-semibold tracking-[0.16em] uppercase">
             Related models
           </p>
-          <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.035em] sm:text-4xl">
             Keep exploring.
           </h2>
           <div className="bg-border mt-10 grid gap-px overflow-hidden rounded-lg border md:grid-cols-2">
@@ -450,7 +502,7 @@ export function InstantRamenModelPageTemplate({
                     : 'Coming Soon'}
                 </span>
                 <div className="mt-3 flex items-end justify-between gap-5">
-                  <h3 className="text-2xl font-black tracking-[-0.03em]">
+                  <h3 className="text-2xl font-extrabold tracking-[-0.025em]">
                     {relatedModel.displayName}
                   </h3>
                   <span
@@ -475,7 +527,7 @@ export function InstantRamenModelPageTemplate({
             <p className="font-mono text-xs font-semibold tracking-[0.16em] text-orange-400 uppercase">
               {model.allowGeneration ? 'Create now' : 'Available alternatives'}
             </p>
-            <h2 className="mt-3 text-4xl font-black tracking-[-0.05em] text-balance sm:text-5xl">
+            <h2 className="mt-3 text-4xl font-extrabold tracking-[-0.04em] text-balance sm:text-5xl">
               {model.allowGeneration
                 ? `Turn a prompt into an image with ${model.displayName}.`
                 : 'Create while Instant Ramen is in development.'}

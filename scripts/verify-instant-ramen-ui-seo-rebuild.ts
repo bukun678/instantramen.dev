@@ -23,9 +23,28 @@ const generatorModels = getInstantRamenGeneratorEntryModels();
 
 assert(
   instantRamenArtwork.hero.length >= 3 &&
-    instantRamenArtwork.gallery.length >= 8,
-  'The homepage must use at least three original hero candidates and eight original gallery images.'
+    instantRamenArtwork.gallery.length >= 12,
+  'The homepage must use at least three original hero candidates and twelve varied gallery images.'
 );
+
+const artworkCategories = new Set<string>(
+  instantRamenArtwork.gallery.map((artwork) => artwork.category)
+);
+for (const category of [
+  'Portrait',
+  'Product advertising',
+  'Food photography',
+  'Social campaign',
+  'Children’s illustration',
+  'Interior design',
+  'Pet concept',
+  'Cinematic scene',
+]) {
+  assert(
+    artworkCategories.has(category),
+    `The refreshed gallery must include ${category}.`
+  );
+}
 
 assert(
   generatorModels.map((model) => model.slug).join(',') === coreSlugs.join(','),
@@ -164,6 +183,37 @@ assert(
   'The single homepage LCP artwork must advertise a high fetch priority.'
 );
 assert(
+  homeTemplate.includes('data-hero-artwork="primary"') &&
+    homeTemplate.includes('data-mobile-hero-artwork="primary-only"') &&
+    homeTemplate.includes('data-model-layout={index === 0') &&
+    homeTemplate.includes("? 'featured'") &&
+    homeTemplate.includes('data-mobile-gallery="rail"'),
+  'Homepage visual hierarchy must keep one dominant hero, a differentiated model layout, and a compact mobile gallery rail.'
+);
+assert(
+  homeTemplate.includes('lg:pt-28') &&
+    homeTemplate.includes('lg:text-[5.625rem]') &&
+    homeTemplate.includes('lg:mt-10'),
+  'Desktop hero spacing and heading scale must remain tightened without changing the mobile heading scale.'
+);
+assert(
+  homeTemplate.includes('lg:min-h-[504px]'),
+  'The featured GPT Image 2 showcase artwork must remain approximately ten percent shorter.'
+);
+assert(
+  homeTemplate.includes('data-gallery-prompt') &&
+    homeTemplate.includes('Example creation ·') &&
+    homeTemplate.includes('getArtworkPromptSummary') &&
+    !homeTemplate.includes('{artwork.prompt}'),
+  'Gallery cards must expose a concise prompt summary instead of covering artwork with the full prompt.'
+);
+assert(
+  homeTemplate.includes('hover:border-orange-300/25') &&
+    homeTemplate.includes('group-focus-visible:') &&
+    !homeTemplate.includes('group-focus:'),
+  'Gallery hover emphasis must stay subtle while the full overlay and ring remain keyboard focus-visible only.'
+);
+assert(
   !homeTemplate.includes('bg-[radial-gradient') &&
     !homeTemplate.includes('linear-gradient'),
   'Homepage must not use CSS gradient artwork placeholders.'
@@ -183,9 +233,62 @@ assert(
   'Generator status updates must be announced accessibly.'
 );
 assert(
+  generatorTemplate.includes('Try an example prompt') &&
+    generatorTemplate.includes('data-generator-empty-state'),
+  'The generator result canvas must provide a useful, modern empty state.'
+);
+assert(
   generatorTemplate.includes('data-model-slug={option.slug}') &&
     !generatorTemplate.includes('aria-label={'),
   'Model choices must expose their complete visible name and status to assistive technology.'
+);
+assert(
+  generatorTemplate.includes('data-mobile-model-card') &&
+    generatorTemplate.includes('min-h-[72px]') &&
+    generatorTemplate.includes('py-1.5') &&
+    generatorTemplate.includes('sm:min-h-24') &&
+    generatorTemplate.includes('text-balance') &&
+    !generatorTemplate.includes('Roadmap model'),
+  'Mobile model cards must be more compact, keep names to two balanced lines, and avoid duplicated roadmap copy.'
+);
+
+for (const [slug, title] of [
+  ['gpt-image-2', 'GPT Image 2 Generator'],
+  ['nano-banana', 'Nano Banana 2 Generator'],
+  ['instant-ramen', 'Instant Ramen AI Image Model'],
+] as const) {
+  assert(
+    getInstantRamenModelBySlug(slug)?.heroTitle === title,
+    `${slug} must use the concise, unbroken model-page heading.`
+  );
+}
+assert(
+  getInstantRamenModelBySlug('gpt-image-2')?.heroDescription.includes(
+    'Create detailed AI images from text prompts'
+  ),
+  'GPT Image 2 must move its descriptive promise into the subtitle.'
+);
+assert(
+  modelTemplate.includes('whitespace-nowrap') &&
+    modelTemplate.includes('lg:grid-cols-[0.9fr_1.1fr]') &&
+    modelTemplate.includes('lg:min-h-[560px]'),
+  'Model heroes must keep model names together and give product copy more visual weight.'
+);
+
+const galleryCategories = instantRamenArtwork.gallery
+  .slice(0, 6)
+  .map((artwork) => artwork.category);
+assert(
+  galleryCategories.join(',') ===
+    [
+      'Portrait',
+      '3D product visual',
+      'Food photography',
+      'Website hero',
+      'Social campaign',
+      'Interior design',
+    ].join(','),
+  'Gallery ordering must separate vivid campaign work with neutral product, travel, or interior examples.'
 );
 
 const seoToolTemplate = readFileSync(
@@ -227,9 +330,33 @@ assert(
   'Instant Ramen pages must define scoped warm-light and charcoal-dark theme tokens.'
 );
 assert(
-  globalStyles.includes('--primary: #b64900') &&
+  globalStyles.includes('--instant-ramen-font-sans:') &&
+    globalStyles.includes('font-family: var(--instant-ramen-font-sans)') &&
     globalStyles.includes('.instant-ramen-footer a'),
-  'The light theme must use a contrast-safe orange and distinguish footer links without color alone.'
+  'Instant Ramen surfaces must use a modern scoped sans stack while retaining accessible footer links.'
+);
+assert(
+  globalStyles.includes('--muted-foreground: oklch(0.73') &&
+    globalStyles.includes('--muted-foreground: oklch(0.82'),
+  'Dark surfaces and navigation must use slightly stronger muted text contrast without turning pure white.'
+);
+
+const headerTemplate = readFileSync(
+  'src/themes/default/blocks/header.tsx',
+  'utf8'
+);
+assert(
+  headerTemplate.includes('focus-visible:ring-2') &&
+    headerTemplate.includes('focus-visible:outline-none') &&
+    !headerTemplate.includes('focus:ring-2'),
+  'Navigation must reserve its obvious focus ring for keyboard focus-visible interaction.'
+);
+
+assert(
+  modelTemplate.includes('Prompt') &&
+    modelTemplate.includes('Result') &&
+    modelTemplate.includes('data-model-workflow-example'),
+  'Model pages must visually connect a prompt with a representative result.'
 );
 
 const localeLayout = readFileSync('src/app/[locale]/layout.tsx', 'utf8');
@@ -244,6 +371,22 @@ assert(
     themeProvider.indexOf('globalThis.__name') <
       themeProvider.indexOf('<NextThemesProvider'),
   'Cloudflare must define the function-name helper before the next-themes no-flash script runs.'
+);
+
+const animatedThemeToggler = readFileSync(
+  'src/shared/components/magicui/animated-theme-toggler.tsx',
+  'utf8'
+);
+assert(
+  animatedThemeToggler.includes('focus-visible:ring-2') &&
+    animatedThemeToggler.includes('outline-none') &&
+    !animatedThemeToggler.includes('focus:ring-2'),
+  'Theme toggle emphasis must appear only for keyboard focus-visible interaction.'
+);
+assert(
+  animatedThemeToggler.includes("event.pointerType === 'mouse'") &&
+    animatedThemeToggler.includes('event.currentTarget.blur()'),
+  'Mouse activation must release focus so the keyboard-only theme focus ring does not persist.'
 );
 
 const commonMessages = readFileSync(

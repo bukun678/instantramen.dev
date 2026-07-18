@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="9 9 50 50" role="img" aria-labelledby="instant-ramen-logo-title">
+  <title id="instant-ramen-logo-title">Instant Ramen logo</title>
+  <g id="instant-ramen-mark">
+    <path fill="#F05A19" d="M23.5 12h-6C14.2 12 11.5 14.7 11.5 18v30.5c0 3.3 2.7 6 6 6s6-2.7 6-6v-6c-2.3-2-1.8-4.5 1-5.7s1.9-3.5-1-5.3V12Z"/>
+    <path fill="currentColor" d="M23.3 12H37c9 0 15 5 15 13.5 0 6.5-4 11.5-10.2 14 4.8 4.3 10.2 9.2 14.2 13 2 1.4.5 2-2.2 2h-2.7c-1.5 0-2.5-.5-3.5-1.6C42.8 51 37.6 46.1 32.5 43h-9c-2.3-2.5-1.8-5 1-6.2s1.9-3.5-1-5.3h13c5 0 7.8-2.3 7.8-6.5S41.5 20 36.5 20H23.3Z"/>
+  </g>
+</svg>

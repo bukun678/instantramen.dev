@@ -206,9 +206,9 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       'A future first-party image model concept for the Instant Ramen workspace.',
     description:
       'Instant Ramen is the planned first-party AI image model for this workspace. It is not available for generation yet, so this page documents the product direction without presenting concept artwork as model output.',
-    heroTitle: 'Instant Ramen AI Image Model — Coming Soon',
+    heroTitle: 'Instant Ramen AI Image Model',
     heroDescription:
-      'The Instant Ramen image model is still in development. Explore the concept, then create today with GPT Image 2 or Nano Banana 2.',
+      'Instant Ramen is coming soon. Explore the concept, then create today with GPT Image 2 or Nano Banana 2.',
     features: [
       'Planned text-to-image workflow',
       'Future model-specific capability mapping',
@@ -311,8 +311,9 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       'A text-to-image model for detailed prompts, polished scenes, and visual iteration.',
     description:
       'GPT Image 2 is available in Instant Ramen for text-to-image generation. Write a prompt, choose an aspect ratio, and follow the generation task until the image is ready to download.',
-    heroTitle: 'GPT Image 2 Generator for Detailed AI Images',
-    heroDescription: `Use the GPT Image 2 generator inside ${productName} for prompt-driven image creation with multiple aspect ratios and a focused result workflow.`,
+    heroTitle: 'GPT Image 2 Generator',
+    heroDescription:
+      'Create detailed AI images from text prompts with GPT Image 2, multiple aspect ratios, and a focused workflow from generation to download.',
     features: [
       'Text-to-image generation from natural-language prompts',
       'Square, portrait, landscape, and vertical aspect ratios',
@@ -414,8 +415,9 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       'A fast text-to-image option for creative prompts, visual exploration, and quick iterations.',
     description:
       'Nano Banana 2 is available in Instant Ramen for text-to-image generation. It gives creators a direct way to explore prompt ideas, compare visual directions, and download finished results.',
-    heroTitle: 'Nano Banana 2 AI Image Generator',
-    heroDescription: `Use Nano Banana 2 inside ${productName} for fast prompt-driven image generation and creative visual iteration.`,
+    heroTitle: 'Nano Banana 2 Generator',
+    heroDescription:
+      'Create expressive AI images from text prompts with Nano Banana 2 for fast creative exploration and visual iteration.',
     features: [
       'Text-to-image generation from a written prompt',
       'Multiple aspect ratios for common creative formats',

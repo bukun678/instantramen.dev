@@ -1,10 +1,10 @@
 {
   "header": {
     "brand": {
-      "title": "ShipAny Two",
+      "title": "Instant Ramen",
       "logo": {
-        "src": "/logo.png",
-        "alt": "ShipAny Two"
+        "src": "/instant-ramen-logo.svg",
+        "alt": "Instant Ramen"
       },
       "url": "/admin"
     },

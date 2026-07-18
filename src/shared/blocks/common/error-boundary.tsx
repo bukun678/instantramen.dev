@@ -1,12 +1,12 @@
 'use client';
 
 import { Component, ErrorInfo, ReactNode } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { envConfigs } from '@/config';
 import { Button } from '@/shared/components/ui/button';
 
+import { InstantRamenLogoMark } from './instant-ramen-logo-mark';
 import { SmartIcon } from './smart-icon';
 
 interface Props {
@@ -43,11 +43,9 @@ export class ErrorBoundary extends Component<Props, State> {
       }
       return (
         <div className="flex h-screen flex-col items-center justify-center gap-4">
-          <Image
-            src={envConfigs.app_logo}
-            alt={envConfigs.app_name}
-            width={80}
-            height={80}
+          <InstantRamenLogoMark
+            className="text-foreground size-20"
+            label={envConfigs.app_name}
           />
           <h1 className="text-2xl font-normal">Something went wrong</h1>
           <p className="text-muted-foreground">

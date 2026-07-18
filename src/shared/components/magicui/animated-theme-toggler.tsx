@@ -64,7 +64,15 @@ export const AnimatedThemeToggler = ({ className }: props) => {
     <button
       ref={buttonRef}
       onClick={changeTheme}
-      className={cn(className)}
+      onPointerUp={(event) => {
+        if (event.pointerType === 'mouse') {
+          event.currentTarget.blur();
+        }
+      }}
+      className={cn(
+        'text-muted-foreground hover:text-foreground inline-flex size-11 items-center justify-center rounded-md outline-none transition focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+        className
+      )}
       aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDarkMode ? <SunDim /> : <Moon />}

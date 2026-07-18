@@ -1,18 +1,15 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { envConfigs } from '@/config';
-import { SmartIcon } from '@/shared/blocks/common/smart-icon';
+import { InstantRamenLogoMark, SmartIcon } from '@/shared/blocks/common';
 import { Button } from '@/shared/components/ui/button';
 
 export default function NotFoundPage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center gap-4">
-      <Image
-        src={envConfigs.app_logo}
-        alt={envConfigs.app_name}
-        width={80}
-        height={80}
+      <InstantRamenLogoMark
+        className="text-foreground size-20"
+        label={envConfigs.app_name}
       />
       <h1 className="text-2xl font-normal">Page not found</h1>
       <Button asChild>

@@ -1,5 +1,5 @@
 import { Link } from '@/core/i18n/navigation';
-import { LazyImage } from '@/shared/blocks/common';
+import { InstantRamenLogoMark } from '@/shared/blocks/common';
 import { Badge } from '@/shared/components/ui/badge';
 import {
   SidebarHeader as SidebarHeaderComponent,
@@ -24,13 +24,22 @@ export function SidebarHeader({ header }: { header: SidebarHeaderType }) {
             >
               {header.brand && (
                 <Link href={header.brand.url || ''}>
-                  {header.brand.logo && (
-                    <img
-                      src={header.brand.logo.src}
-                      alt={header.brand.logo.alt || ''}
-                      className="h-auto w-8 shrink-0 rounded-md"
-                    />
-                  )}
+                  {header.brand.logo &&
+                    (header.brand.logo.src.split('#')[0] ===
+                    '/instant-ramen-logo.svg' ? (
+                      <InstantRamenLogoMark
+                        className="text-foreground size-8"
+                        label={
+                          header.brand.title ? undefined : header.brand.logo.alt
+                        }
+                      />
+                    ) : (
+                      <img
+                        src={header.brand.logo.src}
+                        alt={header.brand.logo.alt || ''}
+                        className="h-auto w-8 shrink-0 rounded-md"
+                      />
+                    ))}
                   <div className="relative text-base font-semibold">
                     {header.brand.title}
                     {header.version && (
