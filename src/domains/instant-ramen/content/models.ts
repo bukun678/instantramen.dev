@@ -10,6 +10,12 @@ import type {
 
 const productName = instantRamenBrandConfig.productName;
 
+export const instantRamenImageToImageInputPolicy = {
+  acceptedMimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
+  maxBytes: 10 * 1024 * 1024,
+  maxImages: 1,
+} as const;
+
 function modelSeo({
   slug,
   title,
@@ -71,6 +77,8 @@ function buildModel({
   faq,
   supportedModes,
   creditCost,
+  modeCreditCosts,
+  imageInput,
   seoTitle,
   seoDescription,
   keywords,
@@ -109,6 +117,8 @@ function buildModel({
   faq: InstantRamenModelConfig['faq'];
   supportedModes: InstantRamenSupportedMode[];
   creditCost: number;
+  modeCreditCosts?: Partial<Record<InstantRamenSupportedMode, number>>;
+  imageInput?: InstantRamenModelConfig['imageInput'];
   seoTitle: string;
   seoDescription: string;
   keywords: string;
@@ -166,6 +176,8 @@ function buildModel({
     supportedModes,
     aspectRatios: ['1:1', '3:4', '4:3', '9:16', '16:9'],
     creditCost,
+    modeCreditCosts: modeCreditCosts ?? { 'text-to-image': creditCost },
+    imageInput,
     seo: modelSeo({
       slug,
       title: seoTitle,
@@ -308,16 +320,16 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     allowGeneration: true,
     showInGenerator: true,
     shortDescription:
-      'A text-to-image model for detailed prompts, polished scenes, and visual iteration.',
+      'An image model for detailed prompts, reference-led transformations, and polished visual iteration.',
     description:
-      'GPT Image 2 is available in Instant Ramen for text-to-image generation. Write a prompt, choose an aspect ratio, and follow the generation task until the image is ready to download.',
+      'GPT Image 2 is available in Instant Ramen for text-to-image and single-reference image-to-image generation. Write a prompt, choose an aspect ratio, and follow the generation task until the image is ready to download.',
     heroTitle: 'GPT Image 2 Generator',
     heroDescription:
       'Create detailed AI images from text prompts with GPT Image 2, multiple aspect ratios, and a focused workflow from generation to download.',
     features: [
       'Text-to-image generation from natural-language prompts',
+      'Prompt-guided transformation from one reference image',
       'Square, portrait, landscape, and vertical aspect ratios',
-      'Asynchronous generation status and downloadable results',
     ],
     strengths: [
       'Suited to prompts with multiple visual details',
@@ -325,7 +337,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       'A focused option for deliberate visual iteration',
     ],
     limitations: [
-      'The current Instant Ramen flow supports text input only',
+      'The first image-to-image version accepts one reference image without masks or local edits',
       'Results can vary between generations and prompts',
       'Generation uses credits and depends on provider availability',
     ],
@@ -378,21 +390,26 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       {
         question: 'Does the current GPT Image 2 flow support image editing?',
         answer:
-          'No. The current MVP exposes text-to-image generation. Image editing is not part of this page or generator yet.',
+          'Yes. Image to Image accepts one PNG, JPEG, or WebP reference and a prompt for whole-image transformation. Masks and local inpainting are not included in this MVP.',
       },
       {
         question: `Is ${productName} the official GPT Image 2 website?`,
         answer: `No. ${productName} is an independent multi-model AI image generation platform that offers GPT Image 2 as one model option.`,
       },
     ],
-    supportedModes: ['text-to-image'],
+    supportedModes: ['text-to-image', 'image-to-image'],
     creditCost: 8,
+    modeCreditCosts: {
+      'text-to-image': 8,
+      'image-to-image': 8,
+    },
+    imageInput: instantRamenImageToImageInputPolicy,
     seoTitle: 'GPT Image 2 Generator Online',
     seoDescription:
       'Use the GPT Image 2 generator online for prompt-driven AI images, multiple aspect ratios, task status, and downloadable results.',
     keywords:
       'GPT Image 2 generator, GPT Image 2 image generator, GPT Image 2 online, AI image generation',
-    supportsImageInput: false,
+    supportsImageInput: true,
     supportsMaskInput: false,
     supportsNegativePrompt: false,
   }),
@@ -412,16 +429,16 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
     allowGeneration: true,
     showInGenerator: true,
     shortDescription:
-      'A fast text-to-image option for creative prompts, visual exploration, and quick iterations.',
+      'A fast option for prompt creation, reference-led transformations, and quick visual iterations.',
     description:
-      'Nano Banana 2 is available in Instant Ramen for text-to-image generation. It gives creators a direct way to explore prompt ideas, compare visual directions, and download finished results.',
+      'Nano Banana 2 is available in Instant Ramen for text-to-image and single-reference image-to-image generation. It gives creators a direct way to explore ideas, transform a reference, and download finished results.',
     heroTitle: 'Nano Banana 2 Generator',
     heroDescription:
       'Create expressive AI images from text prompts with Nano Banana 2 for fast creative exploration and visual iteration.',
     features: [
       'Text-to-image generation from a written prompt',
+      'Prompt-guided transformation from one reference image',
       'Multiple aspect ratios for common creative formats',
-      'Task polling, result preview, and download',
     ],
     strengths: [
       'Suited to quick creative exploration',
@@ -429,7 +446,7 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
       'A practical option for lightweight prompt iteration',
     ],
     limitations: [
-      'The current Instant Ramen flow supports text input only',
+      'The first image-to-image version accepts one reference image without masks or local edits',
       'Results depend on prompt clarity and may vary',
       'Generation uses credits and depends on provider availability',
     ],
@@ -489,14 +506,19 @@ export const instantRamenModels: InstantRamenModelConfig[] = [
         answer: `No. Nano Banana 2 is one available option inside ${productName}, alongside GPT Image 2 and the coming-soon Instant Ramen model.`,
       },
     ],
-    supportedModes: ['text-to-image'],
+    supportedModes: ['text-to-image', 'image-to-image'],
     creditCost: 4,
+    modeCreditCosts: {
+      'text-to-image': 4,
+      'image-to-image': 4,
+    },
+    imageInput: instantRamenImageToImageInputPolicy,
     seoTitle: 'Nano Banana 2 AI Image Generator Online',
     seoDescription:
       'Use Nano Banana 2 online for fast prompt-driven AI image generation, multiple aspect ratios, result previews, and downloads.',
     keywords:
       'Nano Banana AI, Nano Banana image generator, Nano Banana online, Nano Banana 2, AI image generator',
-    supportsImageInput: false,
+    supportsImageInput: true,
     supportsMaskInput: false,
     supportsNegativePrompt: false,
   }),

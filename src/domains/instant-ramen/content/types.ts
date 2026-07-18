@@ -120,6 +120,12 @@ export type InstantRamenModelConfig = {
   supportedModes: InstantRamenSupportedMode[];
   aspectRatios: InstantRamenAspectRatio[];
   creditCost: number;
+  modeCreditCosts: Partial<Record<InstantRamenSupportedMode, number>>;
+  imageInput?: {
+    acceptedMimeTypes: readonly string[];
+    maxBytes: number;
+    maxImages: number;
+  };
   seo: InstantRamenPageSeoConfig;
   seoTitle: string;
   seoDescription: string;

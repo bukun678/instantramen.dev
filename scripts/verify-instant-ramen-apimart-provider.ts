@@ -70,7 +70,10 @@ async function verifyAPImartRequest({
     mapping.providerModelId === expectedProviderModelId,
     `${slug} must map to ${expectedProviderModelId}.`
   );
-  assert(mapping.providerStatus === 'configured', `${slug} must be configured.`);
+  assert(
+    mapping.providerStatus === 'configured',
+    `${slug} must be configured.`
+  );
 
   let capturedUrl = '';
   let capturedInit: RequestInit | undefined;
@@ -118,7 +121,10 @@ async function verifyAPImartRequest({
 
   const body = JSON.parse(String(capturedInit?.body));
 
-  assert(body.model === expectedProviderModelId, `${slug} request model mismatch.`);
+  assert(
+    body.model === expectedProviderModelId,
+    `${slug} request model mismatch.`
+  );
   assert(
     body.prompt === 'A clean APImart verification prompt',
     `${slug} request prompt mismatch.`
@@ -201,6 +207,34 @@ async function verifyOfficialTaskQuery() {
   );
 }
 
+async function verifyCompletedTaskRequiresImage() {
+  const result = await queryAPImartTask({
+    apiKey: 'verify-token',
+    fetcher: async () =>
+      new Response(
+        JSON.stringify({
+          code: 200,
+          data: {
+            id: 'task_without_image',
+            status: 'completed',
+            progress: 100,
+            result: { images: [] },
+          },
+        }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          status: 200,
+        }
+      ),
+    taskId: 'task_without_image',
+  });
+
+  assert(
+    result.status === 'failed' && result.imageUrl === null,
+    'A completed APImart task without a recognized image URL must fail so credits can be restored.'
+  );
+}
+
 async function verifyProviderErrorSanitization() {
   const mapping = getInstantRamenGenerationModelProvider('gpt-image-2');
   assert(mapping, 'gpt-image-2 must have an APImart mapping.');
@@ -260,6 +294,7 @@ async function main() {
     slug: 'nano-banana',
   });
   await verifyOfficialTaskQuery();
+  await verifyCompletedTaskRequiresImage();
   await verifyProviderErrorSanitization();
 
   const apiRoute = read('src/app/api/instant-ramen/text-to-image/route.ts');

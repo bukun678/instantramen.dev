@@ -77,9 +77,16 @@
 
 .instant-ramen-result-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-  background-size: 28px 28px;
+    linear-gradient(
+      color-mix(in oklab, var(--foreground) 4%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--foreground) 4%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 44px 44px;
 }
 
 .instant-ramen-gallery {
@@ -88,23 +95,6 @@
 
 .instant-ramen-final-cta {
   background: #1b1815;
-}
-
-.instant-ramen-generator-result {
-  background: #1c1d1b;
-}
-
-.dark .instant-ramen-generator-shell {
-  background: oklch(0.215 0.007 70);
-}
-
-.dark .instant-ramen-generator-result {
-  background: #141512;
-}
-
-.dark .instant-ramen-result-grid {
-  border-color: rgba(255, 255, 255, 0.12);
-  background-color: #22231f;
 }
 
 .dark .instant-ramen-gallery {

@@ -117,11 +117,12 @@ async function readAPIMartPayload(response: Response) {
 }
 
 function getAPIMartErrorMessage(payload: any, status: number) {
-  const message = typeof payload?.error?.message === 'string'
-    ? payload.error.message
-    : typeof payload?.message === 'string'
-      ? payload.message
-      : `APImart request failed with status ${status}.`;
+  const message =
+    typeof payload?.error?.message === 'string'
+      ? payload.error.message
+      : typeof payload?.message === 'string'
+        ? payload.message
+        : `APImart request failed with status ${status}.`;
 
   return message.replace(/\[sk-[^\]]+\]\s*/gi, '');
 }
@@ -201,8 +202,18 @@ export async function queryAPImartTask({
   const status = getAPIMartTaskStatus(payload);
 
   if (status === 'succeeded') {
+    const imageUrl = getAPIMartTaskImageUrl(payload);
+    if (!imageUrl) {
+      return {
+        imageUrl: null,
+        rawResponse: payload,
+        status: 'failed',
+        taskId,
+      };
+    }
+
     return {
-      imageUrl: getAPIMartTaskImageUrl(payload),
+      imageUrl,
       rawResponse: payload,
       status: 'succeeded',
       taskId,

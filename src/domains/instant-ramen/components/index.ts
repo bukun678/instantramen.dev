@@ -1,3 +1,4 @@
+export * from './ai-image-generator-hero';
 export * from './home-landing-page';
 export * from './model-page-template';
 export * from './models-index-page';

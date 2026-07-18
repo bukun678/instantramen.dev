@@ -1,4 +1,4 @@
-import { and, count, desc, eq, sql } from 'drizzle-orm';
+import { and, count, desc, eq, isNull, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/core/db';
 import { aiTask, credit } from '@/config/db/schema';
@@ -54,42 +54,156 @@ export async function findAITaskById(id: string) {
   return result;
 }
 
+async function restoreConsumedCredits(tx: any, creditId: string) {
+  const [consumedCredit] = await tx
+    .select()
+    .from(credit)
+    .where(and(eq(credit.id, creditId), eq(credit.status, CreditStatus.ACTIVE)))
+    .for('update');
+
+  if (!consumedCredit || consumedCredit.status !== CreditStatus.ACTIVE) {
+    return;
+  }
+
+  const consumedItems = JSON.parse(consumedCredit.consumedDetail || '[]');
+  await Promise.all(
+    consumedItems.map((item: any) => {
+      if (item && item.creditId && item.creditsConsumed > 0) {
+        return tx
+          .update(credit)
+          .set({
+            remainingCredits: sql`${credit.remainingCredits} + ${item.creditsConsumed}`,
+          })
+          .where(eq(credit.id, item.creditId));
+      }
+    })
+  );
+
+  await tx
+    .update(credit)
+    .set({
+      status: CreditStatus.DELETED,
+    })
+    .where(
+      and(eq(credit.id, creditId), eq(credit.status, CreditStatus.ACTIVE))
+    );
+}
+
+export async function updatePendingAITaskWithProviderResult(
+  id: string,
+  updateAITask: UpdateAITask
+) {
+  const [result] = await db()
+    .update(aiTask)
+    .set(updateAITask)
+    .where(
+      and(
+        eq(aiTask.id, id),
+        eq(aiTask.status, AITaskStatus.PENDING),
+        isNull(aiTask.taskId)
+      )
+    )
+    .returning();
+
+  return result ?? null;
+}
+
+export async function failStalePendingAITask({
+  id,
+  staleBefore,
+  taskInfo,
+}: {
+  id: string;
+  staleBefore: Date;
+  taskInfo: string;
+}) {
+  return db().transaction(async (tx: any) => {
+    const staleCondition = and(
+      eq(aiTask.id, id),
+      eq(aiTask.status, AITaskStatus.PENDING),
+      isNull(aiTask.taskId),
+      lte(aiTask.updatedAt, staleBefore)
+    );
+    const [staleTask] = await tx
+      .select()
+      .from(aiTask)
+      .where(staleCondition)
+      .for('update');
+
+    if (!staleTask) {
+      return null;
+    }
+
+    if (staleTask.creditId) {
+      await restoreConsumedCredits(tx, staleTask.creditId);
+    }
+
+    const [failedTask] = await tx
+      .update(aiTask)
+      .set({
+        status: AITaskStatus.FAILED,
+        taskInfo,
+      })
+      .where(staleCondition)
+      .returning();
+
+    return failedTask ?? null;
+  });
+}
+
+export async function applyAITaskProviderPollResult({
+  id,
+  status,
+  taskInfo,
+  taskResult,
+}: {
+  id: string;
+  status: AITaskStatus;
+  taskInfo: string;
+  taskResult?: string | null;
+}) {
+  return db().transaction(async (tx: any) => {
+    const [lockedTask] = await tx
+      .select()
+      .from(aiTask)
+      .where(eq(aiTask.id, id))
+      .for('update');
+
+    if (!lockedTask) {
+      return null;
+    }
+
+    if (
+      lockedTask.status === AITaskStatus.SUCCESS ||
+      lockedTask.status === AITaskStatus.FAILED ||
+      lockedTask.status === AITaskStatus.CANCELED
+    ) {
+      return lockedTask;
+    }
+
+    if (status === AITaskStatus.FAILED && lockedTask.creditId) {
+      await restoreConsumedCredits(tx, lockedTask.creditId);
+    }
+
+    const [updatedTask] = await tx
+      .update(aiTask)
+      .set({
+        status,
+        taskInfo,
+        taskResult: taskResult ?? lockedTask.taskResult,
+      })
+      .where(eq(aiTask.id, id))
+      .returning();
+
+    return updatedTask ?? null;
+  });
+}
+
 export async function updateAITaskById(id: string, updateAITask: UpdateAITask) {
   const result = await db().transaction(async (tx: any) => {
     // task failed, Revoke credit consumption record
     if (updateAITask.status === AITaskStatus.FAILED && updateAITask.creditId) {
-      // get consumed credit record
-      const [consumedCredit] = await tx
-        .select()
-        .from(credit)
-        .where(eq(credit.id, updateAITask.creditId));
-      if (consumedCredit && consumedCredit.status === CreditStatus.ACTIVE) {
-        const consumedItems = JSON.parse(consumedCredit.consumedDetail || '[]');
-
-        // console.log('consumedItems', consumedItems);
-
-        // add back consumed credits
-        await Promise.all(
-          consumedItems.map((item: any) => {
-            if (item && item.creditId && item.creditsConsumed > 0) {
-              return tx
-                .update(credit)
-                .set({
-                  remainingCredits: sql`${credit.remainingCredits} + ${item.creditsConsumed}`,
-                })
-                .where(eq(credit.id, item.creditId));
-            }
-          })
-        );
-
-        // delete consumed credit record
-        await tx
-          .update(credit)
-          .set({
-            status: CreditStatus.DELETED,
-          })
-          .where(eq(credit.id, updateAITask.creditId));
-      }
+      await restoreConsumedCredits(tx, updateAITask.creditId);
     }
 
     // update task

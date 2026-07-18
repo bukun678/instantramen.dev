@@ -1,6 +1,7 @@
 import { instantRamenBrandConfig } from '../config/brand';
 import type { InstantRamenRouteKey } from '../config/routes';
 import { getInstantRamenPageContent } from '../content/pages';
+import { InstantRamenAiImageGeneratorHero } from './ai-image-generator-hero';
 import { InstantRamenTextToImageMvp } from './text-to-image-mvp';
 
 function ArrowLink({ href, label }: { href: string; label: string }) {
@@ -31,28 +32,12 @@ export function InstantRamenSeoToolPage({
 
   if (routeKey === 'aiImageGenerator') {
     return (
-      <main className="instant-ramen-surface bg-background text-foreground overflow-x-clip">
-        <section className="px-4 pt-28 pb-12 sm:px-6 sm:pt-32 lg:pt-36 lg:pb-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="max-w-4xl">
-              {content.eyebrow ? (
-                <p className="text-primary font-mono text-xs font-semibold tracking-[0.18em] uppercase">
-                  {content.eyebrow}
-                </p>
-              ) : null}
-              <h1 className="mt-5 text-5xl font-extrabold tracking-[-0.045em] text-balance sm:text-6xl lg:text-7xl">
-                {content.headline}
-              </h1>
-              <p className="text-muted-foreground mt-6 max-w-2xl text-base leading-7 sm:text-lg">
-                {content.summary}
-              </p>
-            </div>
-          </div>
-        </section>
+      <main className="instant-ramen-surface bg-background text-foreground overflow-x-clip pt-14 lg:pt-18">
+        <InstantRamenAiImageGeneratorHero />
 
         <section
           id="generator"
-          className="scroll-mt-20 border-t px-4 py-12 sm:px-6 lg:py-20"
+          className="scroll-mt-20 px-4 pt-4 pb-12 sm:px-6 sm:pt-6 lg:pb-20"
         >
           <div className="mx-auto max-w-7xl">
             <InstantRamenTextToImageMvp compact />

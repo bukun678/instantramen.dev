@@ -335,9 +335,10 @@ export const instantRamenPageContent: Record<
         'AI image generator, text to image, prompt driven generation, multi-model AI image generation platform, Instant Ramen image generator',
       noIndex: false,
     }),
-    eyebrow: 'Text to Image · SEO Tool Page',
-    headline: 'AI Image Generator for prompt driven creation',
-    summary: `${productName} turns prompts into images across a future-ready provider layer. This SEO page positions ${productName} as a multi-model AI image generation platform, not a single-model site.`,
+    eyebrow: 'AI IMAGE GENERATOR',
+    headline: 'Create images from a prompt.',
+    summary:
+      'Describe what you want, choose a model, and generate your image in seconds.',
     primaryCta: { label: 'Open Create', href: '/create' },
     secondaryCta: { label: 'Compare models', href: '/models/instant-ramen' },
     sections: [

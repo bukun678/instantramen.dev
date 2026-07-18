@@ -268,6 +268,15 @@ export async function consumeCredits({
       }
     }
 
+    // The optimistic balance check above can become stale while this
+    // transaction waits for locked grant rows. Never create a full consume
+    // record unless the locked rows actually covered the complete charge.
+    if (remainingToConsume > 0) {
+      throw new Error(
+        `Insufficient credits after locking, ${credits - remainingToConsume} < ${credits}`
+      );
+    }
+
     // 3. create consumed credit
     const consumedCredit: NewCredit = {
       id: getUuid(),
@@ -321,7 +330,7 @@ export async function getRemainingCredits(userId: string): Promise<number> {
 }
 
 // grant credits for new user
-export async function grantCreditsForNewUser(user: User) {
+export async function grantCreditsForNewUser(user: User, tx?: any) {
   // get configs from db
   const configs = await getAllConfigs();
 
@@ -346,6 +355,7 @@ export async function grantCreditsForNewUser(user: User) {
     credits: credits,
     validDays: creditsValidDays,
     description: description,
+    tx,
   });
 
   return newCredit;
@@ -357,11 +367,13 @@ export async function grantCreditsForUser({
   credits,
   validDays,
   description,
+  tx,
 }: {
   user: User;
   credits: number;
   validDays?: number;
   description?: string;
+  tx?: any;
 }) {
   if (credits <= 0) {
     return;
@@ -391,7 +403,11 @@ export async function grantCreditsForUser({
     status: CreditStatus.ACTIVE,
   };
 
-  await createCredit(newCredit);
+  if (tx) {
+    await tx.insert(credit).values(newCredit);
+  } else {
+    await createCredit(newCredit);
+  }
 
   return newCredit;
 }

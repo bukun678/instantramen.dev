@@ -1,12 +1,12 @@
 import {
   getInstantRamenModelBySlug,
   type InstantRamenModelConfig,
+  type InstantRamenSupportedMode,
 } from '../content';
 
 export type InstantRamenGenerationProviderStatus = 'configured';
 
-export type InstantRamenGenerationExecutionStatus =
-  | 'ready';
+export type InstantRamenGenerationExecutionStatus = 'ready';
 
 export type InstantRamenGenerationModelProvider = {
   slug: string;
@@ -18,6 +18,9 @@ export type InstantRamenGenerationModelProvider = {
   apiKeyEnvName: 'APIMART_API_KEY';
   allowGeneration: boolean;
   creditCost: number;
+  modeCreditCosts: Partial<Record<InstantRamenSupportedMode, number>>;
+  supportedModes: InstantRamenSupportedMode[];
+  imageInput?: InstantRamenModelConfig['imageInput'];
 };
 
 const MVP_GENERATION_MODEL_SLUGS = ['gpt-image-2', 'nano-banana'] as const;
@@ -45,6 +48,9 @@ function buildGenerationModelProvider(
       model.availability === 'available' &&
       model.allowGeneration,
     creditCost: model.creditCost,
+    modeCreditCosts: model.modeCreditCosts,
+    supportedModes: model.supportedModes,
+    imageInput: model.imageInput,
   };
 }
 

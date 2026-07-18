@@ -3,6 +3,12 @@ import {
   getDefaultInstantRamenGenerationModel,
   getInstantRamenGeneratorEntryModels,
 } from '../content/models';
+import type { InstantRamenSupportedMode } from '../content/types';
+
+export type InstantRamenGenerationMode = Extract<
+  InstantRamenSupportedMode,
+  'text-to-image' | 'image-to-image'
+>;
 
 export type InstantRamenTextToImageMvpModel = {
   slug: string;
@@ -24,12 +30,31 @@ export const instantRamenTextToImageMvpModels: InstantRamenTextToImageMvpModel[]
 export const instantRamenGeneratorEntryModels =
   getInstantRamenGeneratorEntryModels();
 
-export function resolveInstantRamenGeneratorModel(slug?: string | null) {
+export function getInstantRamenGenerationModelsForMode(
+  mode: InstantRamenGenerationMode
+) {
+  return generationEnabledInstantRamenModels.filter(
+    (model) =>
+      model.supportedModes.includes(mode) &&
+      (mode !== 'image-to-image' || model.capabilities.supportsImageInput)
+  );
+}
+
+export function resolveInstantRamenGeneratorModel(
+  slug?: string | null,
+  mode: InstantRamenGenerationMode = 'text-to-image'
+) {
+  const availableModels = getInstantRamenGenerationModelsForMode(mode);
   const requestedModel = slug
-    ? generationEnabledInstantRamenModels.find((model) => model.slug === slug)
+    ? availableModels.find((model) => model.slug === slug)
     : undefined;
 
-  return (requestedModel ?? getDefaultInstantRamenGenerationModel()).slug;
+  return (
+    requestedModel ??
+    availableModels.find((model) => model.defaultSelected) ??
+    availableModels[0] ??
+    getDefaultInstantRamenGenerationModel()
+  ).slug;
 }
 
 export function getInstantRamenTextToImageMvpModel(slug: string) {

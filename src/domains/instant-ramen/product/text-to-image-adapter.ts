@@ -5,17 +5,20 @@ import {
   type APIMartImageSize,
 } from './apimart-provider';
 import { getInstantRamenGenerationModelProvider } from './model-provider-map';
-import { getInstantRamenTextToImageMvpModel } from './text-to-image';
+import type { InstantRamenGenerationMode } from './text-to-image';
 
 export type InstantRamenTextToImageRequest = {
+  mode?: InstantRamenGenerationMode;
   prompt: string;
   model: string;
   shipAnyUserId?: string;
   size?: string;
+  inputImageUrl?: string;
 };
 
 export type InstantRamenTextToImageResult = {
   imageUrl: string | null;
+  mode: InstantRamenGenerationMode;
   model: string;
   provider: string;
   providerModelId: string;
@@ -41,20 +44,20 @@ export const instantRamenTextToImageSizes: Array<{
   { label: 'Wide 16:9', value: '16:9' },
 ];
 
-function normalizeAPIMartSize(size?: string): APIMartImageSize {
-  const value = instantRamenTextToImageSizes.find(
-    (option) => option.value === size
-  )?.value;
-
-  return value ?? '16:9';
-}
-
 export class InstantRamenTextToImageError extends Error {
   constructor(
     public readonly code:
       | 'prompt_required'
+      | 'prompt_too_long'
+      | 'invalid_mode'
       | 'invalid_model'
+      | 'invalid_parameter'
       | 'invalid_task'
+      | 'task_not_found'
+      | 'forbidden'
+      | 'input_image_required'
+      | 'input_image_not_allowed'
+      | 'insufficient_credits'
       | 'coming_soon'
       | 'provider_not_configured'
       | 'provider_request_failed',
@@ -66,13 +69,143 @@ export class InstantRamenTextToImageError extends Error {
   }
 }
 
-export async function generateInstantRamenTextToImage({
+export function normalizeInstantRamenGenerationMode(
+  mode?: string | null
+): InstantRamenGenerationMode {
+  if (!mode || mode === 'text-to-image') {
+    return 'text-to-image';
+  }
+
+  if (mode === 'image-to-image') {
+    return mode;
+  }
+
+  throw new InstantRamenTextToImageError(
+    'invalid_mode',
+    'Invalid generation mode.',
+    400
+  );
+}
+
+function normalizeAPIMartSize(size?: string): APIMartImageSize {
+  if (!size) {
+    return '16:9';
+  }
+
+  const value = instantRamenTextToImageSizes.find(
+    (option) => option.value === size
+  )?.value;
+
+  if (!value) {
+    throw new InstantRamenTextToImageError(
+      'invalid_parameter',
+      'Invalid output aspect ratio.',
+      400
+    );
+  }
+
+  return value;
+}
+
+function getGenerationContext({
+  mode,
+  model,
+}: {
+  mode: InstantRamenGenerationMode;
+  model: string;
+}) {
+  const catalogModel = getInstantRamenModelBySlug(model);
+
+  if (catalogModel?.availability === 'coming-soon') {
+    throw new InstantRamenTextToImageError(
+      'coming_soon',
+      `${catalogModel.displayName} is coming soon and cannot generate images yet.`,
+      409
+    );
+  }
+
+  const providerMapping = getInstantRamenGenerationModelProvider(model);
+
+  if (!catalogModel || !providerMapping?.allowGeneration) {
+    throw new InstantRamenTextToImageError(
+      'invalid_model',
+      'This model is not available in the generation entry.',
+      400
+    );
+  }
+
+  if (
+    !providerMapping.supportedModes.includes(mode) ||
+    (mode === 'image-to-image' &&
+      (!catalogModel.capabilities.supportsImageInput ||
+        !providerMapping.imageInput))
+  ) {
+    throw new InstantRamenTextToImageError(
+      'invalid_model',
+      `${catalogModel.displayName} does not support ${mode}.`,
+      400
+    );
+  }
+
+  const creditCost = providerMapping.modeCreditCosts[mode];
+  if (!Number.isInteger(creditCost) || Number(creditCost) <= 0) {
+    throw new InstantRamenTextToImageError(
+      'invalid_model',
+      `${catalogModel.displayName} does not have a configured credit cost for ${mode}.`,
+      409
+    );
+  }
+
+  return {
+    catalogModel,
+    creditCost: Number(creditCost),
+    providerMapping,
+  };
+}
+
+export function getInstantRamenGenerationCreditCost({
+  mode,
+  model,
+}: {
+  mode: InstantRamenGenerationMode;
+  model: string;
+}) {
+  return getGenerationContext({ mode, model }).creditCost;
+}
+
+function requireSafeInputImageUrl(inputImageUrl?: string) {
+  if (!inputImageUrl) {
+    throw new InstantRamenTextToImageError(
+      'input_image_required',
+      'Upload a reference image before generating.',
+      400
+    );
+  }
+
+  try {
+    const url = new URL(inputImageUrl);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') {
+      throw new Error('Unsupported image URL protocol.');
+    }
+    return url.toString();
+  } catch {
+    throw new InstantRamenTextToImageError(
+      'input_image_not_allowed',
+      'The uploaded image reference is invalid.',
+      400
+    );
+  }
+}
+
+export function validateInstantRamenGenerationRequest({
+  mode: requestedMode,
   prompt,
   model,
   size,
-}: InstantRamenTextToImageRequest): Promise<InstantRamenTextToImageResult> {
+  inputImageUrl,
+}: InstantRamenTextToImageRequest) {
+  const mode = normalizeInstantRamenGenerationMode(requestedMode);
   const trimmedPrompt = prompt.trim();
-  const selectedModel = getInstantRamenTextToImageMvpModel(model);
 
   if (!trimmedPrompt) {
     throw new InstantRamenTextToImageError(
@@ -82,64 +215,77 @@ export async function generateInstantRamenTextToImage({
     );
   }
 
-  if (!selectedModel) {
-    const catalogModel = getInstantRamenModelBySlug(model);
-
-    if (catalogModel?.availability === 'coming-soon') {
-      throw new InstantRamenTextToImageError(
-        'coming_soon',
-        `${catalogModel.displayName} is coming soon and cannot generate images yet.`,
-        409
-      );
-    }
-
+  if (trimmedPrompt.length > 2000) {
     throw new InstantRamenTextToImageError(
-      'invalid_model',
-      'Invalid model.',
+      'prompt_too_long',
+      'Prompt must be 2,000 characters or fewer.',
       400
     );
   }
 
-  const providerMapping = getInstantRamenGenerationModelProvider(
-    selectedModel.slug
-  );
-
-  if (!providerMapping?.allowGeneration) {
-    throw new InstantRamenTextToImageError(
-      'invalid_model',
-      'This model is not available in the generation entry.',
-      400
-    );
-  }
+  const context = getGenerationContext({ mode, model });
+  const normalizedSize = normalizeAPIMartSize(size);
+  const normalizedInputImageUrl =
+    mode === 'image-to-image'
+      ? requireSafeInputImageUrl(inputImageUrl)
+      : undefined;
 
   if (!process.env.APIMART_API_KEY) {
     throw new InstantRamenTextToImageError(
       'provider_not_configured',
-      `${selectedModel.label} is available, but its provider is not configured yet.`,
+      `${context.catalogModel.displayName} is available, but its provider is not configured yet.`,
       503
     );
   }
 
-  if (providerMapping.provider !== 'apimart') {
+  if (context.providerMapping.provider !== 'apimart') {
     throw new InstantRamenTextToImageError(
       'provider_not_configured',
-      `${selectedModel.label} does not have an APImart provider mapping.`,
+      `${context.catalogModel.displayName} does not have an APImart provider mapping.`,
       503
     );
   }
+
+  return {
+    ...context,
+    inputImageUrl: normalizedInputImageUrl,
+    mode,
+    prompt: trimmedPrompt,
+    size: normalizedSize,
+  };
+}
+
+export async function generateInstantRamenTextToImage({
+  mode: requestedMode,
+  prompt,
+  model,
+  size,
+  inputImageUrl,
+}: InstantRamenTextToImageRequest): Promise<InstantRamenTextToImageResult> {
+  const validated = validateInstantRamenGenerationRequest({
+    mode: requestedMode,
+    prompt,
+    model,
+    size,
+    inputImageUrl,
+  });
 
   try {
     const result = await generateAPImartImage({
-      model: providerMapping,
-      prompt: trimmedPrompt,
-      size: normalizeAPIMartSize(size),
+      imageUrls: validated.inputImageUrl
+        ? [validated.inputImageUrl]
+        : undefined,
+      model: validated.providerMapping,
+      prompt: validated.prompt,
+      size: validated.size,
     });
 
     return {
       imageUrl: result.imageUrl,
-      model: selectedModel.slug,
-      provider: providerMapping.provider,
-      providerModelId: providerMapping.providerModelId,
+      mode: validated.mode,
+      model: validated.catalogModel.slug,
+      provider: validated.providerMapping.provider,
+      providerModelId: validated.providerMapping.providerModelId,
       status: result.status,
       taskId: result.taskId,
       mock: false,
@@ -147,7 +293,9 @@ export async function generateInstantRamenTextToImage({
   } catch (error) {
     throw new InstantRamenTextToImageError(
       'provider_request_failed',
-      error instanceof Error ? error.message : 'APImart image generation failed.',
+      error instanceof Error
+        ? error.message
+        : 'APImart image generation failed.',
       502
     );
   }
